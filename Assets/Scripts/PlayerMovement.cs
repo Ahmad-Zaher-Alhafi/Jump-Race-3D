@@ -8,7 +8,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float rotatingSpeed;
     [SerializeField] private float jumpforce;
     [SerializeField] private float lowestYPosToLose;
-    [SerializeField] private Animator animator;
 
     private Rigidbody rig;
     private bool hasToMove;
@@ -39,34 +38,16 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //if (PlayerMeshCharacter.Instance.IsPlayerAlive && transform.position.y <= lowestYPosToLose)
-        //{
-        //    PlayerMeshCharacter.Instance.Die();
-        //}
-
-        //if (!PlayerMeshCharacter.Instance.IsPlayerAlive)
-        //{
-        //    rig.useGravity = false;
-        //    return;
-        //}
-
-        //rig.useGravity = true;
-
         if (hasToMove)
         {
-            //animator.SetBool(Constances.PlayerHasToRunParameter, true);
             MoveForward();
             Rotate();
-        }
-        else
-        {
-            //animator.SetBool(Constances.PlayerHasToRunParameter, false);
         }
     }
 
     private void MoveForward()
     {
-        transform.Translate(Vector3.forward * forwardSpeed * Time.deltaTime);//move forward
+        transform.Translate(Vector3.forward * forwardSpeed * Time.deltaTime);
     }
 
     private void Rotate()
@@ -80,10 +61,9 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             secondXMousePos = mousePosOnX;
+            transform.Rotate(Vector3.up * (secondXMousePos - firstXMousePos) * rotatingSpeed * Time.deltaTime);
+            firstXMousePos = secondXMousePos;
         }
-
-        transform.Rotate(Vector3.up * (secondXMousePos - firstXMousePos) * rotatingSpeed * Time.deltaTime);
-        firstXMousePos = secondXMousePos;
     }
 
     public void Jump()
