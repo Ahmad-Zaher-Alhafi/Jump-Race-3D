@@ -6,6 +6,8 @@ public static class Constances
 {
     //Layers Numbers
     public static int JumpObjectLayerNum = 3;
+    public static int PlayerLayerNum = 6;
+
 
     //Animation Clips Names
     public static string PlayerRunAnimation = "Run";

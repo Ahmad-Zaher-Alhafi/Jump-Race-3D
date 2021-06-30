@@ -44,4 +44,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pathCreater: {fileID: 0}
-  jumpObject: {fileID: 7348422681966478271, guid: a16f0c3d38f16aa45bdb2807a472794b, type: 3}
+  jumpObjectBase: {fileID: 3277516432391836987, guid: 860f4dae430278e448f2331c1b14af5c, type: 3}
+  jumpObjectsColors:
+  - {r: 0.9960785, g: 0.1254902, b: 0.53333336, a: 0}
+  - {r: 1, g: 0, b: 0, a: 0}
+  - {r: 0.8962264, g: 0.8927616, b: 0.012682426, a: 0}
+  - {r: 0.39481133, g: 0.764151, b: 0, a: 0}
+  - {r: 0.020914912, g: 0.8867924, b: 0.85283655, a: 0}
