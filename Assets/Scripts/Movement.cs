@@ -34,11 +34,20 @@ public class Movement : MonoBehaviour
         speedUpPeriod = new WaitForSeconds(speedUpTime);
     }
 
-    public void Jump()
+    public void Jump(bool isItLongJump)
     {
         isAbleToJump = false;
         rig.velocity = Vector3.zero;
-        rig.AddForce(Vector3.up * jumpforce, ForceMode.Impulse);
+
+        if (isItLongJump)
+        {
+            rig.AddForce(Vector3.up * jumpforce * 2, ForceMode.Impulse);
+        }
+        else
+        {
+            rig.AddForce(Vector3.up * jumpforce, ForceMode.Impulse);
+        }
+                    
     }
 
     public void SpeedUp()

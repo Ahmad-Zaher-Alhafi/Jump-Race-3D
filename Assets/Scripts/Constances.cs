@@ -4,6 +4,9 @@ using UnityEngine;
 
 public static class Constances
 {
+    //Tags
+    public static string PathJumpObjectTag = "PathJumpObject";
+
     //Layers Numbers
     public static int JumpObjectLayerNum = 3;
     public static int PlayerLayerNum = 6;

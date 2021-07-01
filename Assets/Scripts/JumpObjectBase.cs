@@ -7,6 +7,7 @@ public class JumpObjectBase : MonoBehaviour
     [SerializeField] private JumpObject jumpObjectOfThisBase;
     [SerializeField] private float distanceToMove;
     [SerializeField] private float movingSpeed;
+    [SerializeField] private JumpObject jumpObject;
 
     private bool isItMovingObject;
     private float minDistanceOnX;
@@ -14,15 +15,18 @@ public class JumpObjectBase : MonoBehaviour
 
     private void Start()
     {
-        int rand = Random.Range(0, 5);
-
-        if (rand == 0)
+        if (jumpObject.IsItPathJumpObject)
         {
-            isItMovingObject = true;
-        }
+            int rand = Random.Range(0, 5);
 
-        minDistanceOnX = transform.position.x - distanceToMove;
-        maxDistanceOnX = transform.position.x + distanceToMove;
+            if (rand == 0)
+            {
+                isItMovingObject = true;
+            }
+
+            minDistanceOnX = transform.position.x - distanceToMove;
+            maxDistanceOnX = transform.position.x + distanceToMove;
+        }
     }
 
     private void Update()

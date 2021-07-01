@@ -8,12 +8,18 @@ public class CenterPoint : MonoBehaviour
     [SerializeField] private float minAlpha;
     [SerializeField] private float changingAlphaSpeed;
     [SerializeField] private float distanceToStartBlinking;
+    [SerializeField] private JumpObject jumpObject;
 
     private SpriteRenderer spriteRenderer;
     private float alpha;
 
     void Start()
     {
+        if (jumpObject.tag != Constances.PathJumpObjectTag)
+        {
+            gameObject.SetActive(false);
+        }
+
         spriteRenderer = GetComponent<SpriteRenderer>();
         alpha = spriteRenderer.color.a;
     }
@@ -51,7 +57,7 @@ public class CenterPoint : MonoBehaviour
     {
         if (other.gameObject.layer == Constances.PlayerLayerNum)
         {
-            Player.Instance.SpeedUp();
+            Player.Instance.OnCenterPointHit();
         }
     }
 }

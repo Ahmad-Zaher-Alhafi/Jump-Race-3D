@@ -47,7 +47,15 @@ public class Racer : MonoBehaviour
                 jumpObjectToGoTo = JumpObjectsCreater.Instance.GetNextJumpObject(currentJumpObject.JumpObjectNumper);
             }
 
-            racerMovement.Jump();
+            if (collision.gameObject.tag == Constances.PathJumpObjectTag)
+            {
+                racerMovement.Jump(false);
+            }
+            else
+            {
+                racerMovement.Jump(true);
+            }
+
             numOfJumpsThatHasDid++;
             racerMovement.IsAbleToJump = false;
             animator.PlayAnimation(true);
