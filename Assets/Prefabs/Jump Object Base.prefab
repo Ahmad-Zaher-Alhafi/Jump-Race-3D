@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 3805513608787097753}
   - component: {fileID: 3119003498118822684}
   - component: {fileID: 5865545363132221914}
-  m_Layer: 3
+  - component: {fileID: -3528475028312856712}
+  m_Layer: 7
   m_Name: Jump Object Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,6 +98,21 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &-3528475028312856712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3277516432391836987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f99df15d66c884c4fafd32f6db9d5305, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jumpObjectOfThisBase: {fileID: 395645953362976606}
+  distanceToMove: 3
+  movingSpeed: 1
 --- !u!1001 &4381339208927234575
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -220,3 +236,14 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5927949310292369679, guid: a16f0c3d38f16aa45bdb2807a472794b, type: 3}
   m_PrefabInstance: {fileID: 8568959942805895631}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &395645953362976606 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8329005429245503121, guid: a16f0c3d38f16aa45bdb2807a472794b, type: 3}
+  m_PrefabInstance: {fileID: 8568959942805895631}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77726eab728515d4dbe2b923ba5de962, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

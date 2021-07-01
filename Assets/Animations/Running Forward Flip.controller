@@ -66,7 +66,7 @@ AnimatorStateTransition:
     m_ConditionEvent: hasToJump
     m_EventTreshold: 0
   - m_ConditionMode: 6
-    m_ConditionEvent: AnimationNum
+    m_ConditionEvent: animationNum
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 7113704553392515541}
@@ -97,7 +97,7 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
-  - m_Name: AnimationNum
+  - m_Name: animationNum
     m_Type: 3
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -128,7 +128,7 @@ AnimatorStateTransition:
     m_ConditionEvent: hasToJump
     m_EventTreshold: 0
   - m_ConditionMode: 6
-    m_ConditionEvent: AnimationNum
+    m_ConditionEvent: animationNum
     m_EventTreshold: 2
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 6660002032024143516}
@@ -183,7 +183,7 @@ AnimatorStateTransition:
     m_ConditionEvent: hasToJump
     m_EventTreshold: 0
   - m_ConditionMode: 6
-    m_ConditionEvent: AnimationNum
+    m_ConditionEvent: animationNum
     m_EventTreshold: 1
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 4987798876860274907}
@@ -315,7 +315,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Front Twist Flip
+  m_Name: FrontTwistFlip
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -367,7 +367,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Running Forward Flip
+  m_Name: RunningForwardFlip
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -394,7 +394,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Front Flip
+  m_Name: FrontFlip
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:

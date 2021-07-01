@@ -7,14 +7,34 @@ public class Player : MonoBehaviour
     public static Player Instance;
 
     [SerializeField] private Material validGroundLineMaterial;
-    [SerializeField] private Material InvalidGroundLineMaterial;
-    [SerializeField] private Material validGroundLineEndMaterial;
-    [SerializeField] private Material InvalidGroundLineEndMaterial;
-    [SerializeField] private Renderer lineEndRenderer;
+    [SerializeField] private Material invalidGroundLineMaterial;
+    [SerializeField] private Material validGroundLineEndSpheerMaterial;
+    [SerializeField] private Material invalidGroundLineSpheerEndMaterial;
+    [SerializeField] private Renderer lineEndSpheerRenderer;
+    [SerializeField] private Vector3 lineOffset;
+    [SerializeField] private LayerMask jumpAbleObjectsLayers;
+    public LayerMask JumpAbleObjectsLayers => jumpAbleObjectsLayers;
 
     private LineRenderer lineRenderer;
     private RaycastHit raycastHit;
     private PlayerMovement playerMovement;
+    private Vector3 lineOffsetToAdd;
+    private Vector3 linePoint2;
+    private CharacterAnimator animator;
+    private bool isHittingJumbAbleObject
+    {
+        get
+        {
+            if (raycastHit.collider.gameObject.layer == Constances.JumpObjectLayerNum || raycastHit.collider.gameObject.layer == Constances.JumpObjectBaseLayerNum)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
 
     private void Awake()
     {
@@ -28,31 +48,51 @@ public class Player : MonoBehaviour
     {
         lineRenderer = GetComponent<LineRenderer>();
         playerMovement = GetComponent<PlayerMovement>();
+        animator = GetComponent<CharacterAnimator>();
     }
 
     void Update()
     {
-        lineRenderer.SetPosition(0, transform.position + Vector3.up * .5f);
-        lineRenderer.SetPosition(1, new Vector3(transform.position.x, raycastHit.point.y, transform.position.z));
-        lineEndRenderer.transform.position = new Vector3(lineEndRenderer.transform.position.x, raycastHit.point.y, lineEndRenderer.transform.position.z);
+        lineOffsetToAdd = transform.forward * lineOffset.z + transform.up * lineOffset.y + transform.right * lineOffset.x;
+        lineRenderer.SetPosition(0, transform.position + lineOffsetToAdd);
+        lineRenderer.SetPosition(1, new Vector3(transform.position.x, raycastHit.point.y, transform.position.z) + lineOffsetToAdd);
+        linePoint2 = lineRenderer.GetPosition(1);
+        lineEndSpheerRenderer.transform.position = new Vector3(linePoint2.x, raycastHit.point.y, linePoint2.z);
 
         if (CheckForJumpObject())
         {
             lineRenderer.material = validGroundLineMaterial;
-            lineEndRenderer.material = validGroundLineEndMaterial;
+            lineEndSpheerRenderer.material = validGroundLineEndSpheerMaterial;
         }
         else
         {
-            lineRenderer.material = InvalidGroundLineMaterial;
-            lineEndRenderer.material = InvalidGroundLineEndMaterial;
+            lineRenderer.material = invalidGroundLineMaterial;
+            lineEndSpheerRenderer.material = invalidGroundLineSpheerEndMaterial;
         }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (isHittingJumbAbleObject)
+        {
+            if (playerMovement.IsAbleToJump)
+            {
+                playerMovement.Jump();
+                animator.PlayAnimation(true);
+            }
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        playerMovement.IsAbleToJump = true;
     }
 
     private bool CheckForJumpObject()
     {
         if (Physics.BoxCast(transform.position + Vector3.up, Vector3.one * .1f, Vector3.down, out raycastHit, Quaternion.identity, Mathf.Infinity/*, 1 << Constances.JumpObjectLayerNum*/))
         {
-            if (raycastHit.collider != null && raycastHit.collider.gameObject.layer == Constances.JumpObjectLayerNum)
+            if (raycastHit.collider != null && isHittingJumbAbleObject)
             {
                 return true;
             }

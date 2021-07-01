@@ -109,3 +109,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77726eab728515d4dbe2b923ba5de962, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  JumpObjectNumper: 0
+  IsItLastJumpObject: 0
+  isItMovingObject: 1
+  distanceToMove: 3
+  movingSpeed: 5

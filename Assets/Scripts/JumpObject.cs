@@ -4,8 +4,14 @@ using UnityEngine;
 
 public class JumpObject : MonoBehaviour
 {
+    [HideInInspector] public int JumpObjectNumper;
+    [HideInInspector] public bool IsItLastJumpObject;
+
+   
+
     private Material material;
     private Renderer render;
+
 
     private void Awake()
     {
@@ -13,17 +19,7 @@ public class JumpObject : MonoBehaviour
         material = render.material;
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    
 
     public void SetMaterialColor(Color color)
     {
