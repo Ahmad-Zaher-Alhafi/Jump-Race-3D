@@ -7,13 +7,15 @@ public class JumpObjectsCreater : MonoBehaviour
 {
     public static JumpObjectsCreater Instance;
 
+    [HideInInspector] public List<JumpObject> jumpObjects = new List<JumpObject>();
+
     [SerializeField] private Spline pathCreater;
-    [SerializeField] private GameObject jumpObjectBase;
+    [SerializeField] private GameObject jumpObjectBasePrefab;
+    [SerializeField] private Transform jumpObjectsParent;
     [SerializeField] private Color[] jumpObjectsColors;
     [SerializeField] private Transform ground;
     [SerializeField] private Vector3 exestraJumpObjectBaseOffset;
-    private List<JumpObject> jumpObjects = new List<JumpObject>();
-
+    [SerializeField] private RacersCreater racersCreater;
 
     private void Awake()
     {
@@ -21,10 +23,7 @@ public class JumpObjectsCreater : MonoBehaviour
         {
             Instance = GetComponent<JumpObjectsCreater>();
         }
-    }
 
-    void Start()
-    {
         CreatePathJumpObjects();
         CreatExestraJumpObjects();
     }
@@ -48,19 +47,25 @@ public class JumpObjectsCreater : MonoBehaviour
     {
         for (int i = 0; i < pathCreater.nodes.Count; i++)
         {
-            GameObject jumpOb = Instantiate(jumpObjectBase, pathCreater.transform.TransformPoint(pathCreater.nodes[i].Position), jumpObjectBase.transform.rotation);
+            GameObject jumpOb = Instantiate(jumpObjectBasePrefab, pathCreater.transform.TransformPoint(pathCreater.nodes[i].Position), jumpObjectBasePrefab.transform.rotation, jumpObjectsParent);
             jumpOb.tag = Constances.PathJumpObjectTag;
             Color jumpObColor = jumpObjectsColors[Random.Range(1, jumpObjectsColors.Length)];
             JumpObject jumpObject = jumpOb.transform.GetChild(0).GetComponent<JumpObject>();
             jumpObject.tag = Constances.PathJumpObjectTag;
             jumpObjects.Add(jumpObject);
             jumpObject.SetMaterialColor(jumpObColor);
-            jumpObject.JumpObjectNumper = i;
+            jumpObject.JumpObjectIndex = i;
+            jumpObject.SetPanelNumber(pathCreater.nodes.Count - i);
             jumpObject.IsItPathJumpObject = true;
 
             if (i + 1 == pathCreater.nodes.Count)
             {
                 jumpObject.IsItLastJumpObject = true;
+            }
+
+            if (i <= racersCreater.GetRacersCount())
+            {
+                jumpOb.GetComponent<JumpObjectBase>().IsItRacerStartObject = true;
             }
         }
     }
@@ -76,12 +81,17 @@ public class JumpObjectsCreater : MonoBehaviour
             float randX = Random.Range(jumpObjectBasePos.x - exestraJumpObjectBaseOffset.x, jumpObjectBasePos.x + exestraJumpObjectBaseOffset.x);
             float randZ = Random.Range(jumpObjectBasePos.z - exestraJumpObjectBaseOffset.z, jumpObjectBasePos.z + exestraJumpObjectBaseOffset.z);
             Vector3 randJumpObjectBasePos = new Vector3(randX, ground.position.y + 2, randZ);
-            GameObject jumpOb = Instantiate(jumpObjectBase, randJumpObjectBasePos, jumpObjectBase.transform.rotation);
+            GameObject jumpOb = Instantiate(jumpObjectBasePrefab, randJumpObjectBasePos, jumpObjectBasePrefab.transform.rotation, jumpObjectsParent);
             jumpOb.tag = "Untagged";
             Color jumpObColor = jumpObjectsColors[0];
             JumpObject jumpObject = jumpOb.transform.GetChild(0).GetComponent<JumpObject>();
             jumpObject.tag = "Untagged";
             jumpObject.SetMaterialColor(jumpObColor);
         }
+    }
+
+    public int GetPathPointsNum()
+    {
+        return pathCreater.nodes.Count;
     }
 }

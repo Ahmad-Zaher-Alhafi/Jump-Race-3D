@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4381339208991817651}
   - component: {fileID: 7726524172439428996}
   - component: {fileID: 2219903697395323124}
-  m_Layer: 3
+  m_Layer: 8
   m_Name: Center point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -114,3 +114,4 @@ MonoBehaviour:
   minAlpha: 0.5
   changingAlphaSpeed: 0.5
   distanceToStartBlinking: 20
+  jumpObject: {fileID: 0}

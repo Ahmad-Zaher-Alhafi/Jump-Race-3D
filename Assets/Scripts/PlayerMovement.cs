@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class PlayerMovement : Movement
 {
-    protected override void Start()
+    protected override void Awake()
     {
-        base.Start();
+        base.Awake();
         EventsManager.onLeftMouseInput += OnLeftMouseInput;
+        Physics.gravity *= 2;
     }
 
     private void OnLeftMouseInput(bool isItClickDown)
@@ -51,6 +52,17 @@ public class PlayerMovement : Movement
             transform.Rotate(Vector3.up * (secondXMousePos - firstXMousePos) * rotatingSpeed * Time.deltaTime);
             firstXMousePos = secondXMousePos;
         }
+    }
+
+    public override void OnPrepareNewRace()
+    {
+        base.OnPrepareNewRace();
+    }
+
+    public void StopMoving()
+    {
+        rig.velocity = Vector3.zero;
+        rig.useGravity = false;
     }
 
     private void OnDestroy()

@@ -5,6 +5,10 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 public class CharacterAnimator : MonoBehaviour
 {
+    [SerializeField] private AnimationClip winAnimationClip;
+    [SerializeField] private AnimationClip warmingupAnimationClip;
+
+
     private Animator animator;
 
 
@@ -13,8 +17,13 @@ public class CharacterAnimator : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
-    public void PlayAnimation(bool hasToJump)
+    public void SetAnimatorParameter(bool hasToJump)
     {
+        if (animator == null)
+        {
+            animator = GetComponent<Animator>();
+        }
+
         if (hasToJump)
         {
             animator.SetBool(Constances.HasToJumpParameter, true);
@@ -26,8 +35,28 @@ public class CharacterAnimator : MonoBehaviour
         }
     }
 
+    public void playAnimation(Constances.AnimationsTypes animationType)
+    {
+        if (animator == null)
+        {
+            animator = GetComponent<Animator>();
+        }
+
+        switch (animationType)
+        {
+            case Constances.AnimationsTypes.Win:
+                animator.Play(winAnimationClip.name);
+                break;
+            case Constances.AnimationsTypes.Warmingup:
+                animator.Play(warmingupAnimationClip.name);
+                break;
+            default:
+                break;
+        }
+    }
+
     public void PlayFallAnimation()
     {
-        PlayAnimation(false);
+        SetAnimatorParameter(false);
     }
 }

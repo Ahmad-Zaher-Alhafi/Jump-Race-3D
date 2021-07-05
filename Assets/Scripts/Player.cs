@@ -14,8 +14,9 @@ public class Player : MonoBehaviour
     [SerializeField] private Vector3 lineOffset;
     [SerializeField] private LayerMask jumpAbleObjectsLayers;
     [SerializeField] private float slowTimeSpeed;
-
-    public LayerMask JumpAbleObjectsLayers => jumpAbleObjectsLayers;
+    [SerializeField] private MainCanves mainCanves;
+    [SerializeField] private GameManager gameManager;
+    [SerializeField] private ParticleSystem hitParticles;
 
     private float slowTimeSpeedToAdd;
     private LineRenderer lineRenderer;
@@ -25,7 +26,9 @@ public class Player : MonoBehaviour
     private Vector3 linePoint2;
     private CharacterAnimator animator;
     private bool hasToSlowTimeDown;
-   
+    private JumpObject currentJumpObject;
+    private bool isDead;
+    public bool IsDead => isDead;
 
     private void Awake()
     {
@@ -33,13 +36,14 @@ public class Player : MonoBehaviour
         {
             Instance = GetComponent<Player>();
         }
-    }
 
-    void Start()
-    {
         lineRenderer = GetComponent<LineRenderer>();
         playerMovement = GetComponent<PlayerMovement>();
         animator = GetComponent<CharacterAnimator>();
+        animator.playAnimation(Constances.AnimationsTypes.Warmingup);
+
+        lineEndSpheerRenderer.gameObject.SetActive(false);
+        lineRenderer.enabled = false;
     }
 
     void Update()
@@ -63,13 +67,26 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if (IsItHittingJumbAbleObject(collision.gameObject))
+        if (IsItHittingJumbAbleObject(other.gameObject))
         {
             if (playerMovement.IsAbleToJump)
             {
-                if (collision.gameObject.tag == Constances.PathJumpObjectTag)
+                if (other.gameObject.layer == Constances.JumpObjectLayerNum)
+                {
+                    currentJumpObject = other.gameObject.GetComponent<JumpObject>();
+                    currentJumpObject.OrderToRotate();
+                    mainCanves.SetSliderValue(currentJumpObject.JumpObjectIndex);
+                }
+                else if (other.gameObject.layer == Constances.JumpObjectBaseLayerNum)
+                {
+                    currentJumpObject = other.gameObject.GetComponent<JumpObjectBase>().GetJumpObjectOfThisBase();
+                    other.gameObject.GetComponent<JumpObjectBase>().OrderToRotate();
+                    mainCanves.SetSliderValue(currentJumpObject.JumpObjectIndex);
+                }
+
+                if (other.gameObject.tag == Constances.PathJumpObjectTag)
                 {
                     playerMovement.Jump(false);
                 }
@@ -78,14 +95,25 @@ public class Player : MonoBehaviour
                     playerMovement.Jump(true);
                 }
 
-                animator.PlayAnimation(true);
+                animator.SetAnimatorParameter(true);
             }
+        }
+        else if (other.gameObject.layer == Constances.RacerLayerNum)
+        {
+            hitParticles.transform.position = other.transform.position;
+            hitParticles.Play();
+            other.GetComponent<Racer>().Die();
+            mainCanves.SetStateTxt(Constances.StateTxtWords.Killer);
+        }
+        else if (other.gameObject.tag == Constances.WinObjectTag)
+        {
+            playerMovement.StopMoving();
         }
     }
 
-    private void OnCollisionExit(Collision collision)
+    private void OnTriggerExit(Collider other)
     {
-        if (IsItHittingJumbAbleObject(collision.gameObject))
+        if (IsItHittingJumbAbleObject(other.gameObject))
         {
             playerMovement.IsAbleToJump = true;
         }
@@ -95,9 +123,19 @@ public class Player : MonoBehaviour
     {
         lineOffsetToAdd = transform.forward * lineOffset.z + transform.up * lineOffset.y + transform.right * lineOffset.x;
         lineRenderer.SetPosition(0, transform.position + lineOffsetToAdd);
-        lineRenderer.SetPosition(1, new Vector3(transform.position.x, raycastHit.point.y, transform.position.z) + lineOffsetToAdd);
-        linePoint2 = lineRenderer.GetPosition(1);
-        lineEndSpheerRenderer.transform.position = new Vector3(linePoint2.x, raycastHit.point.y, linePoint2.z);
+
+        if (raycastHit.collider != null)
+        {
+            lineRenderer.SetPosition(1, new Vector3(transform.position.x, raycastHit.point.y, transform.position.z) + lineOffsetToAdd);
+            linePoint2 = lineRenderer.GetPosition(1);
+            lineEndSpheerRenderer.transform.position = new Vector3(linePoint2.x, raycastHit.point.y, linePoint2.z);
+        }
+        else
+        {
+            lineRenderer.SetPosition(1, new Vector3(transform.position.x, -100, transform.position.z) + lineOffsetToAdd);
+            linePoint2 = lineRenderer.GetPosition(1);
+            lineEndSpheerRenderer.transform.position = new Vector3(linePoint2.x, -100, linePoint2.z);
+        }
     }
 
     private bool IsItHittingJumbAbleObject(GameObject objectThatCollidedWith)
@@ -114,14 +152,15 @@ public class Player : MonoBehaviour
 
     private bool CheckForJumpObject()
     {
-        if (Physics.BoxCast(transform.position + Vector3.up, Vector3.one * .1f, Vector3.down, out raycastHit, Quaternion.identity, Mathf.Infinity/*, 1 << Constances.JumpObjectLayerNum*/))
+        if (Physics.BoxCast(transform.position + Vector3.up, Vector3.one * .1f, Vector3.down, out raycastHit, Quaternion.identity, Mathf.Infinity, jumpAbleObjectsLayers))
         {
-            if (raycastHit.collider != null && IsItHittingJumbAbleObject(raycastHit.collider.gameObject))
+            if (raycastHit.collider != null)
             {
                 return true;
             }
             else
             {
+                
                 return false;
             }
         }
@@ -140,6 +179,7 @@ public class Player : MonoBehaviour
         Time.timeScale = .3f;
         Time.fixedDeltaTime = 0.02F * Time.timeScale;
         playerMovement.SpeedUp();
+        mainCanves.SetStateTxt(Constances.StateTxtWords.Prefect);
     }
 
     private void SlowTimeDown()
@@ -162,7 +202,46 @@ public class Player : MonoBehaviour
 
     public void Die()
     {
-        
+        isDead = true;
+        gameManager.FinishRace(false);
+        StartCoroutine(DeactivateAfterTime());
+    }
+
+    private IEnumerator DeactivateAfterTime()
+    {
+        yield return new WaitForSeconds(.05f);
         gameObject.SetActive(false);
+    }
+
+    public void OnPrepareNewRace()
+    {
+        gameObject.SetActive(true);
+        isDead = false;
+        playerMovement.OnPrepareNewRace();
+        animator.playAnimation(Constances.AnimationsTypes.Warmingup);
+    }
+
+    public void OnRaceStart()
+    {
+        lineRenderer.enabled = true;
+        lineEndSpheerRenderer.gameObject.SetActive(true);
+        playerMovement.OnRaceStart();
+    }
+
+    public void PlayWinAnimation()
+    {
+        animator.playAnimation(Constances.AnimationsTypes.Win);
+    }
+
+    public int GetCurrentJumpObjectNum()
+    {
+        if (currentJumpObject != null)
+        {
+            return currentJumpObject.JumpObjectIndex;
+        }
+        else
+        {
+            return 0;
+        }
     }
 }

@@ -7,15 +7,15 @@ public class JumpObject : MonoBehaviour
     [HideInInspector] public bool IsItLastJumpObject;
     [HideInInspector] public bool IsItPathJumpObject;//if it is a jump object that is on the main path
     [SerializeField] private JumpObjectCanves jumpObjectCanves;
+    [SerializeField] private JumpObjectBase jumpObjectBase;
 
-    private int jumpObjectNumper;
-    public int JumpObjectNumper
+    private int jumpObjectIndex;
+    public int JumpObjectIndex
     {
-        get => jumpObjectNumper;
+        get => jumpObjectIndex;
         set
         {
-            jumpObjectNumper = value;
-            jumpObjectCanves.SetJumpObjectNumber(JumpObjectNumper);
+            jumpObjectIndex = value;
         }
     }
     private Material material;
@@ -26,6 +26,16 @@ public class JumpObject : MonoBehaviour
     {
         render = GetComponent<Renderer>();
         material = render.material;
+    }
+
+    public void OrderToRotate()
+    {
+        jumpObjectBase.OrderToRotate();
+    }
+
+    public void SetPanelNumber(int Num)
+    {
+        jumpObjectCanves.SetJumpObjectPanelNumber(Num);
     }
 
     public void SetMaterialColor(Color color)

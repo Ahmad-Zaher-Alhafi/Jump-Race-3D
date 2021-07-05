@@ -657,6 +657,7 @@ GameObject:
   - component: {fileID: 1519954057451923406}
   - component: {fileID: 8439612080236243899}
   - component: {fileID: 2933103401155570548}
+  - component: {fileID: 1359924565}
   - component: {fileID: 2933103401155570544}
   - component: {fileID: 2933103401155570551}
   - component: {fileID: 2933103401155570550}
@@ -786,12 +787,26 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2933103401155570555}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   m_Radius: 0.36689773
-  m_Height: 1.5448042
+  m_Height: 1.3460974
   m_Direction: 1
-  m_Center: {x: -0.026962072, y: 0.7846994, z: 0}
+  m_Center: {x: -0.026962072, y: 0.68534595, z: 0}
+--- !u!136 &1359924565
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2933103401155570555}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.100000024
+  m_Height: 0.48443127
+  m_Direction: 0
+  m_Center: {x: -0.018383503, y: 1.467852, z: 0}
 --- !u!54 &2933103401155570544
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -829,6 +844,10 @@ MonoBehaviour:
   jumpAbleObjectsLayers:
     serializedVersion: 2
     m_Bits: 136
+  slowTimeSpeed: 1
+  mainCanves: {fileID: 0}
+  gameManager: {fileID: 0}
+  hitParticles: {fileID: 0}
 --- !u!114 &2933103401155570550
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -841,9 +860,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3de17406bd15dae44a9bf1f4225a476a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forwardSpeed: 3
+  forwardSpeed: 10
   rotatingSpeed: 10
-  jumpforce: 15
+  jumpforce: 20
   lowestYPosToLose: -5
   speedUpIncreaseValue: 3
   speedUpTime: 3
@@ -859,6 +878,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3d3500c87bad904a823420766c8065e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  winAnimationClip: {fileID: 7400000, guid: 3f9997ba38b1d0d41a6dd214ca2ef100, type: 2}
+  warmingupAnimationClip: {fileID: 7400000, guid: ead724f0216531740ae6fb53cfa3c140, type: 2}
 --- !u!120 &2933103401155570549
 LineRenderer:
   m_ObjectHideFlags: 0

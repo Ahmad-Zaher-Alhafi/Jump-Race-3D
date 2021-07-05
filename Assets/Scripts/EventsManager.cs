@@ -7,7 +7,7 @@ public static class EventsManager
 {
     public static event Action<bool> onLeftMouseInput;
     public static event Action onPlayerDeath;
-
+    public static event Action onNewRaceStart;
 
     public static void OnLeftMouseInput(bool isItClickDown)
     {
@@ -17,5 +17,10 @@ public static class EventsManager
     public static void OnPlayerDeath()
     {
         onPlayerDeath?.Invoke();
+    }
+
+    public static void OnNewLevelStart()
+    {
+        onNewRaceStart?.Invoke();
     }
 }

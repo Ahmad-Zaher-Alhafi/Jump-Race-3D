@@ -26,12 +26,13 @@ public class Movement : MonoBehaviour
         set => isAbleToJump = value;
     }
 
-    protected virtual void Start()
+    protected virtual void Awake()
     {
         rig = GetComponent<Rigidbody>();
         firstXMousePos = Mathf.Infinity;
         initialForwardSpeed = forwardSpeed;
         speedUpPeriod = new WaitForSeconds(speedUpTime);
+        rig.useGravity = false;
     }
 
     public void Jump(bool isItLongJump)
@@ -41,13 +42,13 @@ public class Movement : MonoBehaviour
 
         if (isItLongJump)
         {
-            rig.AddForce(Vector3.up * jumpforce * 2, ForceMode.Impulse);
+            rig.AddForce(Vector3.up * jumpforce * 2.5f, ForceMode.Impulse);
         }
         else
         {
             rig.AddForce(Vector3.up * jumpforce, ForceMode.Impulse);
         }
-                    
+
     }
 
     public void SpeedUp()
@@ -69,5 +70,15 @@ public class Movement : MonoBehaviour
     {
         yield return speedUpPeriod;
         forwardSpeed = initialForwardSpeed;
+    }
+    public virtual void OnPrepareNewRace()
+    {
+        rig.useGravity = false;
+        rig.velocity = Vector3.zero;
+    }
+
+    public void OnRaceStart()
+    {
+        rig.useGravity = true;
     }
 }

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class RacerMovement : Movement
 {
+    [SerializeField] private float hitForce;
+
     private Racer racer;
     private bool hasToMoveToNextJumpObject;
     public bool HasToMoveToNextJumpObject
@@ -12,33 +14,63 @@ public class RacerMovement : Movement
         set => hasToMoveToNextJumpObject = value;
     }
 
-    protected override void Start()
+    protected override void Awake()
     {
-        base.Start();
+        base.Awake();
         racer = GetComponent<Racer>();
     }
 
     private void FixedUpdate()
     {
+        if (racer.IsDead)
+        {
+            return;
+        }
+
         if (hasToMoveToNextJumpObject)
         {
             MoveToNextJumpObject();
             Rotate();
         }
+        else
+        {
+            JumpObject jumpObject = racer.GetCurrentJumpObject();
+
+            if (jumpObject != null)
+            {
+                transform.position = Vector3.Lerp(transform.position, new Vector3(jumpObject.transform.position.x, transform.position.y, jumpObject.transform.position.z), forwardSpeed / Vector3.Distance(transform.position, jumpObject.transform.position) * Time.deltaTime);
+            }
+        }
     }
 
     private void MoveToNextJumpObject()
     {
-        transform.position = Vector3.Lerp(transform.position, new Vector3(racer.GetNextJumpObjectPos().x, transform.position.y, racer.GetNextJumpObjectPos().z), forwardSpeed * Time.deltaTime);
+        JumpObject nextJumpObjectPos = racer.GetNextJumpObject();
+        transform.position = Vector3.Lerp(transform.position, new Vector3(nextJumpObjectPos.transform.position.x, transform.position.y, nextJumpObjectPos.transform.position.z), forwardSpeed / Vector3.Distance(transform.position, nextJumpObjectPos.transform.position) * Time.deltaTime);
     }
 
     private void Rotate()
     {
         Vector3 oldAngle = transform.eulerAngles;
-        transform.LookAt(racer.GetNextJumpObjectPos());
+        transform.LookAt(racer.GetNextJumpObject().transform);
         Vector3 newAngle = transform.eulerAngles;
         transform.eulerAngles = oldAngle;
 
         transform.eulerAngles = Vector3.Slerp(transform.eulerAngles, new Vector3(transform.eulerAngles.x, newAngle.y, transform.eulerAngles.z), rotatingSpeed * Time.deltaTime);
+    }
+
+    public override void OnPrepareNewRace()
+    {
+        base.OnPrepareNewRace();
+        rig.constraints = RigidbodyConstraints.FreezeAll;
+        rig.constraints = ~RigidbodyConstraints.FreezePositionY;
+        hasToMoveToNextJumpObject = false;
+    }
+
+    public void Die()
+    {
+        rig.constraints = RigidbodyConstraints.None;
+        rig.AddForce(Vector3.one * hitForce, ForceMode.Impulse);
+        rig.AddTorque(Vector3.one * hitForce, ForceMode.Impulse);
     }
 }
