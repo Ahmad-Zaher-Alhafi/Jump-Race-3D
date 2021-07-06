@@ -677,7 +677,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2933103401155570555}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 7.74, z: 3.222}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -685,7 +685,7 @@ Transform:
   - {fileID: 284909095065452389}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!137 &1519954057451923406
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 0
@@ -848,6 +848,7 @@ MonoBehaviour:
   mainCanves: {fileID: 0}
   gameManager: {fileID: 0}
   hitParticles: {fileID: 0}
+  startPosOffset: {x: 0, y: 0.2, z: 0}
 --- !u!114 &2933103401155570550
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -879,6 +880,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   winAnimationClip: {fileID: 7400000, guid: 3f9997ba38b1d0d41a6dd214ca2ef100, type: 2}
+  loseAnimationClip: {fileID: 7400000, guid: 2898e30e81ebb2444bd1a5b52be5ddb3, type: 2}
   warmingupAnimationClip: {fileID: 7400000, guid: ead724f0216531740ae6fb53cfa3c140, type: 2}
 --- !u!120 &2933103401155570549
 LineRenderer:

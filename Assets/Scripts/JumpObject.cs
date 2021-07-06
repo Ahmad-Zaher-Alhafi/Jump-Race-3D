@@ -28,6 +28,15 @@ public class JumpObject : MonoBehaviour
         material = render.material;
     }
 
+    private void Start()
+    {
+        if (IsItLastJumpObject)
+        {
+            WinObject winObject = gameObject.AddComponent<WinObject>();
+            winObject.GameManager = FindObjectOfType<GameManager>();
+        }
+    }
+
     public void OrderToRotate()
     {
         jumpObjectBase.OrderToRotate();

@@ -13,6 +13,7 @@ public class RacersCreater : MonoBehaviour
     [SerializeField] private Vector3 racerCreatPosOffset;
     [SerializeField] private GameManager gameManager;
     [SerializeField] private List<RacerInfo> racerInfos;
+    [SerializeField] private MainCanves mainCanves;
 
     void Start()
     {
@@ -23,10 +24,13 @@ public class RacersCreater : MonoBehaviour
             racer.SetCurrentJumpObject(jumpObject);
             racer.SetRacerColor(racerInfos[i].RacerColor);
             racer.RacerName = racerInfos[i].RacerName;
+            racer.RacerDifficulty = racerInfos[i].RacerDifficulty;
             racer.name = racer.RacerName;
             racer.NumOfJumpsToMoveToNextObject = racerInfos[i].NumOfJumpsToMoveToNextObject;
             racers.Add(racer);
         }
+
+        mainCanves.CreateRacersStatePanels(racers.Count + 1);//The (+1) is the player itself
     }
 
     public int GetRacersCount()

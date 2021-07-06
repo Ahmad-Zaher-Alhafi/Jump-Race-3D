@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aeae5f3893714574bb2e58906da2a036, type: 3}
   m_Name: RacerInfo 1
   m_EditorClassIdentifier: 
-  RacerName: Koby
+  RacerName: Jone
   RacerColor: {r: 0.57213455, g: 0.9622642, b: 0.39489147, a: 0}
   NumOfJumpsToMoveToNextObject: 1
-  RacerDifficulty: 1
+  RacerDifficulty: 3

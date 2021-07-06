@@ -59,12 +59,6 @@ public class PlayerMovement : Movement
         base.OnPrepareNewRace();
     }
 
-    public void StopMoving()
-    {
-        rig.velocity = Vector3.zero;
-        rig.useGravity = false;
-    }
-
     private void OnDestroy()
     {
         EventsManager.onLeftMouseInput -= OnLeftMouseInput;

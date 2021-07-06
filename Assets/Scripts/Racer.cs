@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Racer : MonoBehaviour
 {
+    [SerializeField] private Vector3 startPosOffset;
+
     private Renderer render;
     private RacerMovement racerMovement;
     private JumpObject currentJumpObject;
@@ -15,13 +17,24 @@ public class Racer : MonoBehaviour
     public bool IsDead => isDead;
 
     private bool hasFinishedTheRace;
-    public bool HasFinishedTheRace => hasFinishedTheRace;
+    public bool HasFinishedTheRace
+    {
+        get => hasFinishedTheRace;
+        set => hasFinishedTheRace = value;
+    }
 
     private string racerName;
     public string RacerName
     {
         get => racerName;
         set => racerName = value;
+    }
+
+    private int racerRank;
+    public int RacerRank
+    {
+        get => racerRank;
+        set => racerRank = value;
     }
 
     private Constances.RacerDifficulty racerDifficulty;
@@ -36,6 +49,13 @@ public class Racer : MonoBehaviour
     {
         get => numOfJumpsToMoveToNextObject;
         set => numOfJumpsToMoveToNextObject = value;
+    }
+
+    private bool hasWonTheRace;
+    public bool HasWonTheRace
+    {
+        get => hasWonTheRace;
+        set => hasWonTheRace = value;
     }
 
     void Awake()
@@ -59,14 +79,10 @@ public class Racer : MonoBehaviour
         if (other.gameObject.layer == Constances.JumpObjectLayerNum)
         {
             JumpObject jumpObject = other.gameObject.GetComponent<JumpObject>();
+
             if (jumpObject.JumpObjectIndex >= currentJumpObject.JumpObjectIndex)
             {
                 currentJumpObject = jumpObject;
-
-                if (currentJumpObject != null)
-                {
-                    jumpObjectToGoTo = JumpObjectsCreater.Instance.GetNextJumpObject(currentJumpObject.JumpObjectIndex);
-                }
             }
             
         }
@@ -79,10 +95,14 @@ public class Racer : MonoBehaviour
                 currentJumpObject = jumpObject;
             }
         }
-        else
+
+        if (currentJumpObject.IsItLastJumpObject)
         {
             return;
         }
+
+        racerRank = currentJumpObject.JumpObjectIndex;
+        jumpObjectToGoTo = JumpObjectsCreater.Instance.GetNextJumpObject(currentJumpObject.JumpObjectIndex);
 
         if (racerMovement.IsAbleToJump)
         {
@@ -108,7 +128,7 @@ public class Racer : MonoBehaviour
 
             if (!currentJumpObject.IsItLastJumpObject)
             {
-                if (numOfJumpsThatHasDid >= numOfJumpsToMoveToNextObject )
+                if (numOfJumpsThatHasDid >= numOfJumpsToMoveToNextObject)
                 {
                     if (CheckIfHasToDie(racerDifficulty))
                     {
@@ -120,10 +140,6 @@ public class Racer : MonoBehaviour
                         racerMovement.HasToMoveToNextJumpObject = true;
                     }
                 }
-            }
-            else
-            {
-                hasFinishedTheRace = true;
             }
         }
     }
@@ -153,13 +169,16 @@ public class Racer : MonoBehaviour
     public void SetCurrentJumpObject(JumpObject jumpObject)
     {
         currentJumpObject = jumpObject;
+        racerRank = jumpObject.JumpObjectIndex;
     }
 
-    public void OnPrepareNewRace()
+    public void OnPrepareNewRace(JumpObject startJumpObject)
     {
+        transform.position = startJumpObject.transform.position + startPosOffset;
         numOfJumpsThatHasDid = 0;
         racerMovement.HasToMoveToNextJumpObject = false;
         jumpObjectToGoTo = null;
+        animator.SetAnimatorParameter(false);
         animator.playAnimation(Constances.AnimationsTypes.Warmingup);
         isDead = false;
         hasFinishedTheRace = false;
@@ -169,7 +188,21 @@ public class Racer : MonoBehaviour
     public void OnRaceStart()
     {
         racerMovement.OnRaceStart();
-        animator.playAnimation(Constances.AnimationsTypes.Warmingup);
+    }
+
+    public void OnFinishTheRace(bool hasWon)
+    {
+        hasWonTheRace = hasWon;
+        racerMovement.DisableGravity();
+
+        if (hasWon)
+        {
+            animator.playAnimation(Constances.AnimationsTypes.Win);
+        }
+        else
+        {
+            animator.playAnimation(Constances.AnimationsTypes.Lose);
+        }
     }
 
     public void Die()
@@ -187,16 +220,16 @@ public class Racer : MonoBehaviour
             case Constances.RacerDifficulty.Pro:
                 return false;
             case Constances.RacerDifficulty.Hard:
-                 rand = Random.Range(0, 10);
+                 rand = Random.Range(0, 15);
                 return rand == 0 ? true : false;
             case Constances.RacerDifficulty.Normal:
-                 rand = Random.Range(0, 7);
+                 rand = Random.Range(0, 12);
                 return rand == 0 ? true : false;
             case Constances.RacerDifficulty.Easy:
-                 rand = Random.Range(0, 5);
+                 rand = Random.Range(0, 7);
                 return rand == 0 ? true : false;
             case Constances.RacerDifficulty.Noob:
-                 rand = Random.Range(0, 5);
+                 rand = Random.Range(0, 7);
                 return rand == 0 ? true : false;
             default:
                 return false;

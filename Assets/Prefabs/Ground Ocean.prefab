@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 828144461070760720}
   - component: {fileID: 828144461070760723}
   - component: {fileID: 2665606010062394647}
-  - component: {fileID: 4506356420824576021}
   m_Layer: 0
   m_Name: Ground Ocean
   m_TagString: Untagged
@@ -92,7 +91,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 828144461070760721}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5c6a6df342b52d24092cf6bbb590c535, type: 3}
   m_Name: 
@@ -115,19 +114,6 @@ BoxCollider:
   m_Size: {x: 750, y: 2.999996, z: 750}
   m_Center: {x: 0, y: -0.0000017881393, z: 0}
 --- !u!114 &2665606010062394647
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 828144461070760721}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 01d8b234eed5be64abbc87877dd16ed7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  waterParticle: {fileID: 0}
---- !u!114 &4506356420824576021
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

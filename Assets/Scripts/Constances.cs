@@ -47,5 +47,7 @@ public static class Constances
        Fall,
        Win,
        Warmingup,
+       Lose,
+
     }
 }

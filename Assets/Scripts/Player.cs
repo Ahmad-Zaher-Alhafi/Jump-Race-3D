@@ -17,6 +17,7 @@ public class Player : MonoBehaviour
     [SerializeField] private MainCanves mainCanves;
     [SerializeField] private GameManager gameManager;
     [SerializeField] private ParticleSystem hitParticles;
+    [SerializeField] private Vector3 startPosOffset;
 
     private float slowTimeSpeedToAdd;
     private LineRenderer lineRenderer;
@@ -29,6 +30,19 @@ public class Player : MonoBehaviour
     private JumpObject currentJumpObject;
     private bool isDead;
     public bool IsDead => isDead;
+    private bool hasWonTheRace;
+    public bool HasWonTheRace
+    {
+        get => hasWonTheRace;
+        set => hasWonTheRace = value;
+    }
+
+    private int playerRank;
+    public int PlayerRank
+    {
+        get => playerRank;
+        set => playerRank = value;
+    }
 
     private void Awake()
     {
@@ -76,15 +90,20 @@ public class Player : MonoBehaviour
                 if (other.gameObject.layer == Constances.JumpObjectLayerNum)
                 {
                     currentJumpObject = other.gameObject.GetComponent<JumpObject>();
-                    currentJumpObject.OrderToRotate();
-                    mainCanves.SetSliderValue(currentJumpObject.JumpObjectIndex);
                 }
                 else if (other.gameObject.layer == Constances.JumpObjectBaseLayerNum)
                 {
                     currentJumpObject = other.gameObject.GetComponent<JumpObjectBase>().GetJumpObjectOfThisBase();
-                    other.gameObject.GetComponent<JumpObjectBase>().OrderToRotate();
-                    mainCanves.SetSliderValue(currentJumpObject.JumpObjectIndex);
                 }
+
+                if (currentJumpObject.IsItLastJumpObject)
+                {
+                    return;
+                }
+
+                playerRank = currentJumpObject.JumpObjectIndex;
+                currentJumpObject.OrderToRotate();
+                mainCanves.SetSliderValue(currentJumpObject.JumpObjectIndex);
 
                 if (other.gameObject.tag == Constances.PathJumpObjectTag)
                 {
@@ -104,10 +123,6 @@ public class Player : MonoBehaviour
             hitParticles.Play();
             other.GetComponent<Racer>().Die();
             mainCanves.SetStateTxt(Constances.StateTxtWords.Killer);
-        }
-        else if (other.gameObject.tag == Constances.WinObjectTag)
-        {
-            playerMovement.StopMoving();
         }
     }
 
@@ -213,9 +228,12 @@ public class Player : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    public void OnPrepareNewRace()
+    public void OnPrepareNewRace(JumpObject startJumpObject)
     {
         gameObject.SetActive(true);
+        transform.position = startJumpObject.transform.position + startPosOffset;
+        lineEndSpheerRenderer.gameObject.SetActive(false);
+        lineRenderer.enabled = false;
         isDead = false;
         playerMovement.OnPrepareNewRace();
         animator.playAnimation(Constances.AnimationsTypes.Warmingup);
@@ -228,20 +246,30 @@ public class Player : MonoBehaviour
         playerMovement.OnRaceStart();
     }
 
-    public void PlayWinAnimation()
+    public void OnFinishTheRace(bool hasWon)
     {
-        animator.playAnimation(Constances.AnimationsTypes.Win);
-    }
+        hasWonTheRace = hasWon;
+        playerMovement.DisableGravity();
 
-    public int GetCurrentJumpObjectNum()
-    {
-        if (currentJumpObject != null)
+        if (hasWon)
         {
-            return currentJumpObject.JumpObjectIndex;
+            animator.playAnimation(Constances.AnimationsTypes.Win);
         }
         else
         {
-            return 0;
+            animator.playAnimation(Constances.AnimationsTypes.Lose);
+        }
+    }
+
+    public JumpObject GetCurrentJumpObject()
+    {
+        if (currentJumpObject != null)
+        {
+            return currentJumpObject;
+        }
+        else
+        {
+            return null;
         }
     }
 }

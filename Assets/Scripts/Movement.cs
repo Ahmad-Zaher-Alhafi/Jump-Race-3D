@@ -73,12 +73,20 @@ public class Movement : MonoBehaviour
     }
     public virtual void OnPrepareNewRace()
     {
+        transform.eulerAngles = Vector3.up * -90;
+        DisableGravity();
+    }
+
+    public void DisableGravity()
+    {
         rig.useGravity = false;
         rig.velocity = Vector3.zero;
+        //rig.isKinematic = true;
     }
 
     public void OnRaceStart()
     {
         rig.useGravity = true;
+        //rig.isKinematic = false;
     }
 }

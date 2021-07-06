@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   racers: []
+  racersParent: {fileID: 0}
   jumpObjectsCreater: {fileID: 0}
   racerPrefab: {fileID: -4215258715943323376, guid: 5ab6cc350000e20418156543d1e2253d, type: 3}
   racerCreatPosOffset: {x: 0, y: 0, z: 0}
@@ -54,3 +55,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b6ba163d83b117b4c97edf9f9f155d59, type: 2}
   - {fileID: 11400000, guid: 215f0a2e645da5a439f0862f6d2ff162, type: 2}
   - {fileID: 11400000, guid: 2c413e362ae089e43a5d4361c65ffc4a, type: 2}
+  mainCanves: {fileID: 0}

@@ -44,10 +44,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  racers:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  racersCreater: {fileID: 0}
   jumpObjectsCreater: {fileID: 0}
   inputHandler: {fileID: 0}
+  mainCanves: {fileID: 0}

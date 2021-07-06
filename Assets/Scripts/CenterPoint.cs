@@ -12,10 +12,25 @@ public class CenterPoint : MonoBehaviour
 
     private SpriteRenderer spriteRenderer;
     private float alpha;
+    private bool hasToBeDeactivated
+    {
+        get
+        {
+            if (jumpObject.tag != Constances.PathJumpObjectTag || jumpObject.JumpObjectIndex == 0 || jumpObject.IsItLastJumpObject)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
+
 
     void Start()
     {
-        if (jumpObject.tag != Constances.PathJumpObjectTag)
+        if (hasToBeDeactivated)
         {
             gameObject.SetActive(false);
         }

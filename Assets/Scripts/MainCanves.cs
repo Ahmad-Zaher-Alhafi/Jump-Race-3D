@@ -8,7 +8,6 @@ public class MainCanves : MonoBehaviour
 {
     [SerializeField] private Player player;
     [SerializeField] private TextMeshProUGUI stateTxt;
-    [SerializeField] private TextMeshProUGUI[] racersNamesTxts;
     [SerializeField] private Slider progressSlider;
     [SerializeField] private TextMeshProUGUI currentLevelTxt;
     [SerializeField] private TextMeshProUGUI nextLevelTxt;
@@ -16,6 +15,10 @@ public class MainCanves : MonoBehaviour
     [SerializeField] private GameManager gameManager;
     [SerializeField] private GameObject statePanel;
     [SerializeField] private GameObject startPanel;
+    [SerializeField] private RacerStatePanel racerStatePanelPrefab;
+    [SerializeField] private Transform racersStatePanelsParent;
+
+    private List<RacerStatePanel> racerStatePanels = new List<RacerStatePanel>();
 
     void Start()
     {
@@ -57,25 +60,14 @@ public class MainCanves : MonoBehaviour
         stateTxt.gameObject.SetActive(false);
     }
 
-    private void ShowRacerNamesTxts(List<Racer> racers)
+    private void ShowRacerNamesTxts(Dictionary<string, float> racers)
     {
-        if (player.IsDead)
+        int i = 0;
+        foreach (string racerName in racers.Keys)
         {
-            racersNamesTxts[racersNamesTxts.Length - 1].text = "You";
-
-            for (int i = 0; i < racers.Count; i++)
-            {
-                racersNamesTxts[i].text = racers[i].RacerName;
-            }
-        }
-        else
-        {
-            racersNamesTxts[0].text = "You";
-
-            for (int i = 1; i < racers.Count; i++)
-            {
-                racersNamesTxts[i].text = racers[i].RacerName;
-            }
+            //print(i);
+            racerStatePanels[i].SetPanelTxt(racerName);
+            i++;
         }
 
         statePanel.SetActive(true);
@@ -111,9 +103,18 @@ public class MainCanves : MonoBehaviour
         startPanel.SetActive(true);
     }
 
-    public void OnRaceFinish(List<Racer> racers)
+    public void OnRaceFinish(Dictionary<string, float> racers)
     {
         ShowRacerNamesTxts(racers);
+    }
+
+    public void CreateRacersStatePanels(int numOfRacers)
+    {
+        for (int i = 0; i < numOfRacers; i++)
+        {
+            RacerStatePanel racerStatePanel =  Instantiate(racerStatePanelPrefab, racersStatePanelsParent);
+            racerStatePanels.Add(racerStatePanel);
+        }
     }
 
     private void OnDestroy()

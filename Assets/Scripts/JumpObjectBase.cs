@@ -87,7 +87,7 @@ public class JumpObjectBase : MonoBehaviour
             angleToAdd = 0;
             transform.eulerAngles = Vector3.forward * 360;
 
-            if (tag == Constances.PathJumpObjectTag)
+            if (tag == Constances.PathJumpObjectTag && jumpObjectOfThisBase.JumpObjectIndex != 0)
             {
                 centerPoint.gameObject.SetActive(true);
             }

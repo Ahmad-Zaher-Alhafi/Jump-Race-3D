@@ -32,13 +32,11 @@ public class GameManager : MonoBehaviour
 
     public void PrepareNewRace()
     {
-        player.OnPrepareNewRace();
-        player.transform.position = jumpObjectsCreater.jumpObjects[0].transform.position + Vector3.up * 5;
-
+        player.OnPrepareNewRace(jumpObjectsCreater.jumpObjects[0]);
+        
         for (int i = 0; i < racersCreater.racers.Count; i++)
         {
-            racersCreater.racers[i].OnPrepareNewRace();
-            racersCreater.racers[i].transform.position = jumpObjectsCreater.jumpObjects[i + 1].transform.position + Vector3.up * 5;
+            racersCreater.racers[i].OnPrepareNewRace(jumpObjectsCreater.jumpObjects[i + 1]);
         }
 
         racersCreater.OnPrepareNewRace();
@@ -59,8 +57,39 @@ public class GameManager : MonoBehaviour
         }
         
         hasRaceFinished = true;
-        racersCreater.racers = racersCreater.racers.OrderByDescending(t => t.GetCurrentJumpObject().JumpObjectIndex).ToList();
-        mainCanves.OnRaceFinish(racersCreater.racers);
+
+        Dictionary<string, float> racersRanks = new Dictionary<string, float>();
+
+        if (player.HasWonTheRace)
+        {
+            racersRanks.Add("You", player.PlayerRank);
+        }
+        else
+        {
+            racersRanks.Add("You", player.GetCurrentJumpObject().JumpObjectIndex);
+        }
+
+        foreach (Racer racer in racersCreater.racers)
+        {
+            if (racer.HasFinishedTheRace)
+            {
+                racersRanks.Add(racer.RacerName, racer.RacerRank);
+            }
+            else
+            {
+                if (!racersRanks.ContainsKey(racer.RacerName))
+                {
+                    racersRanks.Add(racer.RacerName, racer.GetCurrentJumpObject().JumpObjectIndex);
+                }
+                else
+                {
+                    Debug.LogError("This racer name was used more than one time which leads to error, Make sure that all the racers has uniq names");
+                }
+            }
+        }
+
+        racersRanks = racersRanks.OrderByDescending(t => t.Value).ToDictionary(k => k.Key, k=>k.Value);
+        mainCanves.OnRaceFinish(racersRanks);
     }
 
     public void StartNextLevel()

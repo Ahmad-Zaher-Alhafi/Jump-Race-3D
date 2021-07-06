@@ -6,7 +6,9 @@ using UnityEngine;
 public class CharacterAnimator : MonoBehaviour
 {
     [SerializeField] private AnimationClip winAnimationClip;
+    [SerializeField] private AnimationClip loseAnimationClip;
     [SerializeField] private AnimationClip warmingupAnimationClip;
+
 
 
     private Animator animator;
@@ -49,6 +51,9 @@ public class CharacterAnimator : MonoBehaviour
                 break;
             case Constances.AnimationsTypes.Warmingup:
                 animator.Play(warmingupAnimationClip.name);
+                break;
+            case Constances.AnimationsTypes.Lose:
+                animator.Play(loseAnimationClip.name);
                 break;
             default:
                 break;
