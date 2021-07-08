@@ -5,14 +5,11 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private Player player;
-    [SerializeField] private RacersCreater racersCreater;
-    [SerializeField] private JumpObjectsCreater jumpObjectsCreater;
-    [SerializeField] private InputHandler inputHandler;
-    [SerializeField] private MainCanves mainCanves;
+    public static GameManager Instance;
 
     private bool hasRaceFinished;
     public bool HasRaceFinished => hasRaceFinished;
+
     private int currentLevelNum;
     public int CurrentLevelNum
     {
@@ -20,28 +17,48 @@ public class GameManager : MonoBehaviour
         set => currentLevelNum = value;
     }
 
-    private void StartNewRace()
+    private Dictionary<string, float> racersRanks = new Dictionary<string, float>();
+
+    private bool isThereMoreLevels
     {
-        hasRaceFinished = false;
-        player.OnRaceStart();
-        for (int i = 0; i < racersCreater.racers.Count; i++)
+        get
         {
-            racersCreater.racers[i].OnRaceStart();
+            return currentLevelNum + 1 < JumpObjectsCreater.Instance.GetPathsNumber();
         }
     }
 
-    public void PrepareNewRace()
+    private void Awake()
     {
-        player.OnPrepareNewRace(jumpObjectsCreater.jumpObjects[0]);
-        
-        for (int i = 0; i < racersCreater.racers.Count; i++)
+        if (Instance == null)
         {
-            racersCreater.racers[i].OnPrepareNewRace(jumpObjectsCreater.jumpObjects[i + 1]);
+            Instance = GetComponent<GameManager>();
         }
 
-        racersCreater.OnPrepareNewRace();
-        mainCanves.OnPrepareNewRace();
-        inputHandler.OnPrepareNewRace();
+        currentLevelNum = DataManager.Instance.GetCurrentLevelNum();
+    }
+
+    #region Races Managing
+    public void PrepareNewRace()
+    {
+        EventsManager.OnPrepareNewRace();
+        JumpObjectsCreater.Instance.OnPrepareNewRace(currentLevelNum);
+        RacersCreater.Instance.OnPrepareNewRace();
+        Player.Instance.OnPrepareNewRace(JumpObjectsCreater.Instance.JumpObjects[0]);
+        MainCanves.Instance.OnPrepareNewRace();
+        InputHandler.Instance.OnPrepareNewRace();
+
+        racersRanks.Clear();
+    }
+
+    private void StartNewRace()
+    {
+        hasRaceFinished = false;
+        Player.Instance.OnRaceStart();
+
+        for (int i = 0; i < RacersCreater.Instance.racers.Count; i++)
+        {
+            RacersCreater.Instance.racers[i].OnRaceStart();
+        }
     }
 
     public void FinishRace(bool hasWon)
@@ -51,35 +68,67 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        if (hasWon)
+        hasRaceFinished = true;
+
+        if (hasWon && isThereMoreLevels)
         {
             currentLevelNum++;
         }
         
-        hasRaceFinished = true;
+        SetPlayerRank(hasWon);
+        SetRacersRank();
 
-        Dictionary<string, float> racersRanks = new Dictionary<string, float>();
+        racersRanks = racersRanks.OrderByDescending(t => t.Value).ToDictionary(k => k.Key, k=>k.Value);
 
-        if (player.HasWonTheRace)
+        MainCanves.Instance.OnRaceFinish(racersRanks);
+    }
+
+    public void StartNextLevel()
+    {
+        StartNewRace();
+    }
+    #endregion Races Managing
+
+    #region Ranks Setting
+    private void SetPlayerRank(bool hasWon)
+    {
+        if (hasWon)
         {
-            racersRanks.Add("You", player.PlayerRank);
+            racersRanks.Add("You", Player.Instance.Rank);
         }
         else
         {
-            racersRanks.Add("You", player.GetCurrentJumpObject().JumpObjectIndex);
+            if (Player.Instance.IsDead)
+            {
+                racersRanks.Add("You", 0);
+            }
+            else
+            {
+                racersRanks.Add("You", Player.Instance.GetCurrentJumpObject().JumpObjectIndex);
+            }
         }
+    }
 
-        foreach (Racer racer in racersCreater.racers)
+    private void SetRacersRank()
+    {
+        foreach (Racer racer in RacersCreater.Instance.racers)
         {
             if (racer.HasFinishedTheRace)
             {
-                racersRanks.Add(racer.RacerName, racer.RacerRank);
+                racersRanks.Add(racer.RacerName, racer.Rank);
             }
             else
             {
                 if (!racersRanks.ContainsKey(racer.RacerName))
                 {
-                    racersRanks.Add(racer.RacerName, racer.GetCurrentJumpObject().JumpObjectIndex);
+                    if (racer.IsDead)
+                    {
+                        racersRanks.Add(racer.RacerName, 0);
+                    }
+                    else
+                    {
+                        racersRanks.Add(racer.RacerName, racer.GetCurrentJumpObject().JumpObjectIndex);
+                    }
                 }
                 else
                 {
@@ -87,13 +136,6 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
-
-        racersRanks = racersRanks.OrderByDescending(t => t.Value).ToDictionary(k => k.Key, k=>k.Value);
-        mainCanves.OnRaceFinish(racersRanks);
     }
-
-    public void StartNextLevel()
-    {
-        StartNewRace();
-    }
+    #endregion Ranks Setting
 }

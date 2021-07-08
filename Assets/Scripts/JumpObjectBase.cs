@@ -4,33 +4,47 @@ using UnityEngine;
 
 public class JumpObjectBase : MonoBehaviour
 {
-    [SerializeField] private JumpObject jumpObjectOfThisBase;
     [SerializeField] private float distanceToMove;
     [SerializeField] private float movingSpeed;
     [SerializeField] private float rotatingSpeed;
     [SerializeField] private CenterPoint centerPoint;
+    [SerializeField] private JumpObject jumpObjectOfThisBase;
 
-    private bool isItMovingObject;
+    public JumpObject JumpObjectOfThisBase
+    {
+        get => jumpObjectOfThisBase;
+        private set => jumpObjectOfThisBase = value;
+    }
+
+    private bool hasToMove;
     private float minDistanceOnX;
     private float maxDistanceOnX;
     private bool hasToRotate;
     private float angleToAdd;
     private bool isItRacerStartObject;
-    public bool IsItRacerStartObject//if one of the racers will stand above of this jump object at the begining of the race
+    public bool IsItRacerStartJumpObject//if one of the racers will stand above of this jump object at the begining of the race
     {
         get => isItRacerStartObject;
         set => isItRacerStartObject = value;
     }
 
+    private bool isNotStableObject
+    {
+        get
+        {
+            return jumpObjectOfThisBase.IsItPathJumpObject & !isItRacerStartObject & !jumpObjectOfThisBase.IsItLastJumpObject;
+        }
+    }
+
     private void Start()
     {
-        if (jumpObjectOfThisBase.IsItPathJumpObject && !isItRacerStartObject)
+        if (isNotStableObject)
         {
             int rand = Random.Range(0, 5);
 
             if (rand == 0)
             {
-                isItMovingObject = true;
+                hasToMove = true;
             }
 
             minDistanceOnX = transform.position.x - distanceToMove;
@@ -40,7 +54,7 @@ public class JumpObjectBase : MonoBehaviour
 
     private void Update()
     {
-        if (isItMovingObject)
+        if (hasToMove)
         {
             Move();
         }
@@ -48,6 +62,36 @@ public class JumpObjectBase : MonoBehaviour
         if (hasToRotate)
         {
             Rotate();
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.layer == Constances.PlayerLayerNum)
+        {
+            if (!jumpObjectOfThisBase.IsItLastJumpObject)
+            {
+                Player.Instance.OnTriggerEnterWithJumpableObject(true, jumpObjectOfThisBase, jumpObjectOfThisBase.IsItPathJumpObject);
+            }
+        }
+        else if (other.gameObject.layer == Constances.RacerLayerNum)
+        {
+            if (jumpObjectOfThisBase.IsItPathJumpObject)
+            {
+                other.GetComponent<Racer>().OnTriggerEnterWithJumpableObject(jumpObjectOfThisBase);
+            }
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.layer == Constances.PlayerLayerNum)
+        {
+            Player.Instance.OnTriggerExitFromJumpAbleObject();
+        }
+        else if (other.gameObject.layer == Constances.RacerLayerNum)
+        {
+            other.GetComponent<Racer>().OnTriggerExitFromJumpAbleObject();
         }
     }
 
@@ -70,7 +114,6 @@ public class JumpObjectBase : MonoBehaviour
     public void OrderToRotate()
     {
         hasToRotate = true;
-        centerPoint.gameObject.SetActive(false);
     }
 
     private void Rotate()
@@ -86,17 +129,30 @@ public class JumpObjectBase : MonoBehaviour
             hasToRotate = false;
             angleToAdd = 0;
             transform.eulerAngles = Vector3.forward * 360;
-
-            if (tag == Constances.PathJumpObjectTag && jumpObjectOfThisBase.JumpObjectIndex != 0)
-            {
-                centerPoint.gameObject.SetActive(true);
-            }
-            
         }
+    }
+
+    public void Initialize(bool isItPathJumpObject, int jumpObIndex, Color jumpObColor, int pathObjectsCount)
+    {
+        if (isItPathJumpObject)
+        {
+            tag = Constances.PathJumpObjectTag;
+        }
+        else
+        {
+            tag = "Untagged";
+        }
+
+        jumpObjectOfThisBase.Initialize(isItPathJumpObject, jumpObIndex, jumpObColor, pathObjectsCount);
     }
 
     public JumpObject GetJumpObjectOfThisBase()
     {
         return jumpObjectOfThisBase;
+    }
+
+    public void DeactivateCenterPoint()
+    {
+        centerPoint.DeactivateCenterPoint();
     }
 }

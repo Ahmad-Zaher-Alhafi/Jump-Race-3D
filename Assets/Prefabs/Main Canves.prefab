@@ -487,7 +487,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7282689144281209996}
         m_TargetAssemblyTypeName: MainCanves, Assembly-CSharp
-        m_MethodName: PrepareNextRace
+        m_MethodName: PrepareNewRace
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -948,15 +948,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49679d115eddb9141b5e83ccb5899c9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
   stateTxt: {fileID: 7282689142784901618}
   progressSlider: {fileID: 1587917076271292347}
+  startPanel: {fileID: 1387777394}
   currentLevelTxt: {fileID: 7282689143481952512}
   nextLevelTxt: {fileID: 7282689143445433465}
-  jumpObjectsCreater: {fileID: 0}
-  gameManager: {fileID: 0}
-  statePanel: {fileID: 7364350938500388865}
-  startPanel: {fileID: 1387777394}
+  ranksPanel: {fileID: 7364350938500388865}
   racerStatePanelPrefab: {fileID: -8153908810125579540, guid: 5950410cd916dc245a4377502505b36f, type: 3}
   racersStatePanelsParent: {fileID: 6837436323449037911}
 --- !u!1 &7364350938500388865
@@ -969,7 +966,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8352722767257699759}
   m_Layer: 0
-  m_Name: State Panel
+  m_Name: Ranks Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

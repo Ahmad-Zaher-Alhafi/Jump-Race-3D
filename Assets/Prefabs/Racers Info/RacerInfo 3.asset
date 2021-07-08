@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RacerName: Koby
   RacerColor: {r: 1, g: 0.32766524, b: 0.18396229, a: 0}
-  NumOfJumpsToMoveToNextObject: 2
+  NumOfJumpsToMoveToNextObject: 1
   RacerDifficulty: 1

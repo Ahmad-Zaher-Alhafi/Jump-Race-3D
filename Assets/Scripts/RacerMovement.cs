@@ -62,8 +62,6 @@ public class RacerMovement : Movement
     public override void OnPrepareNewRace()
     {
         base.OnPrepareNewRace();
-        rig.constraints = RigidbodyConstraints.FreezeAll;
-        rig.constraints = ~RigidbodyConstraints.FreezePositionY;
         hasToMoveToNextJumpObject = false;
     }
 

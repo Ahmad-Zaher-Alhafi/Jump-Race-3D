@@ -7,8 +7,8 @@ public class PlayerMovement : Movement
     protected override void Awake()
     {
         base.Awake();
-        EventsManager.onLeftMouseInput += OnLeftMouseInput;
         Physics.gravity *= 2;
+        EventsManager.onLeftMouseInput += OnLeftMouseInput;
     }
 
     private void OnLeftMouseInput(bool isItClickDown)
@@ -52,11 +52,6 @@ public class PlayerMovement : Movement
             transform.Rotate(Vector3.up * (secondXMousePos - firstXMousePos) * rotatingSpeed * Time.deltaTime);
             firstXMousePos = secondXMousePos;
         }
-    }
-
-    public override void OnPrepareNewRace()
-    {
-        base.OnPrepareNewRace();
     }
 
     private void OnDestroy()

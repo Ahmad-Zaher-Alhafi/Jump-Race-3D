@@ -4,33 +4,24 @@ using UnityEngine;
 
 public class RacersCreater : MonoBehaviour
 {
+    public static RacersCreater Instance;
+
     [HideInInspector] public List<Racer> racers = new List<Racer>();
 
     [SerializeField] private Transform racersParent;
-    [SerializeField] private JumpObjectsCreater jumpObjectsCreater;
     [SerializeField] private Racer racerPrefab;
     [Tooltip("The offset between the jump object and the racer that is gonna be created above it")]
     [SerializeField] private Vector3 racerCreatPosOffset;
-    [SerializeField] private GameManager gameManager;
     [SerializeField] private List<RacerInfo> racerInfos;
-    [SerializeField] private MainCanves mainCanves;
 
-    void Start()
+    private bool hasRacersBeenCreated;
+
+    private void Awake()
     {
-        for (int i = 0; i < racerInfos.Count; i++)
+        if (Instance == null)
         {
-            JumpObject jumpObject = jumpObjectsCreater.jumpObjects[i + 1];
-            Racer racer = Instantiate(racerPrefab, jumpObject.transform.position + racerCreatPosOffset, racerPrefab.transform.rotation, racersParent);
-            racer.SetCurrentJumpObject(jumpObject);
-            racer.SetRacerColor(racerInfos[i].RacerColor);
-            racer.RacerName = racerInfos[i].RacerName;
-            racer.RacerDifficulty = racerInfos[i].RacerDifficulty;
-            racer.name = racer.RacerName;
-            racer.NumOfJumpsToMoveToNextObject = racerInfos[i].NumOfJumpsToMoveToNextObject;
-            racers.Add(racer);
+            Instance = GetComponent<RacersCreater>();
         }
-
-        mainCanves.CreateRacersStatePanels(racers.Count + 1);//The (+1) is the player itself
     }
 
     public int GetRacersCount()
@@ -40,10 +31,32 @@ public class RacersCreater : MonoBehaviour
 
     public void OnPrepareNewRace()
     {
-        for (int i = 0; i < racers.Count; i++)
+        if (!hasRacersBeenCreated)
         {
-            JumpObject jumpObject = jumpObjectsCreater.jumpObjects[i + 1];
-            racers[i].SetCurrentJumpObject(jumpObject);
+            hasRacersBeenCreated = true;
+
+            for (int i = 0; i < racerInfos.Count; i++)
+            {
+                JumpObject jumpObject = JumpObjectsCreater.Instance.JumpObjects[i + 1];
+                Racer racer = Instantiate(racerPrefab, jumpObject.transform.position + racerCreatPosOffset, racerPrefab.transform.rotation, racersParent);
+                racer.OnPrepareNewRace(jumpObject);
+                racer.SetRacerColor(racerInfos[i].RacerColor);
+                racer.RacerName = racerInfos[i].RacerName;
+                racer.RacerDifficulty = racerInfos[i].RacerDifficulty;
+                racer.name = racer.RacerName;
+                racer.NumOfJumpsToMoveToNextObject = racerInfos[i].NumOfJumpsToMoveToNextObject;
+                racers.Add(racer);
+            }
+
+            MainCanves.Instance.CreateRacersStatePanels(racers.Count + 1);//The (+1) is the player itself
+        }
+        else
+        {
+            for (int i = 0; i < racers.Count; i++)
+            {
+                JumpObject jumpObject = JumpObjectsCreater.Instance.JumpObjects[i + 1];
+                racers[i].OnPrepareNewRace(jumpObject);
+            }
         }
     }
 }

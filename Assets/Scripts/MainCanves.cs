@@ -6,32 +6,45 @@ using UnityEngine.UI;
 
 public class MainCanves : MonoBehaviour
 {
-    [SerializeField] private Player player;
+    public static MainCanves Instance;
+
     [SerializeField] private TextMeshProUGUI stateTxt;
     [SerializeField] private Slider progressSlider;
+    [SerializeField] private GameObject startPanel;
     [SerializeField] private TextMeshProUGUI currentLevelTxt;
     [SerializeField] private TextMeshProUGUI nextLevelTxt;
-    [SerializeField] private  JumpObjectsCreater jumpObjectsCreater;
-    [SerializeField] private GameManager gameManager;
-    [SerializeField] private GameObject statePanel;
-    [SerializeField] private GameObject startPanel;
+    [SerializeField] private GameObject ranksPanel;
     [SerializeField] private RacerStatePanel racerStatePanelPrefab;
     [SerializeField] private Transform racersStatePanelsParent;
 
     private List<RacerStatePanel> racerStatePanels = new List<RacerStatePanel>();
 
-    void Start()
+    void Awake()
     {
+        if (Instance == null)
+        {
+            Instance = GetComponent<MainCanves>();
+        }
+
         EventsManager.onNewRaceStart += StartNewRace;
-
-        progressSlider.minValue = 0;
-        progressSlider.maxValue = jumpObjectsCreater.GetPathPointsNum();
-
-        PrepareNextRace();
     }
 
+    private void Start()
+    {
+        PrepareNewRace();
+
+        progressSlider.minValue = 0;
+        progressSlider.maxValue = JumpObjectsCreater.Instance.GetPathPointsNum();
+    }
+
+    #region Characers State Management
     public void SetStateTxt(Constances.StateTxtWords word)
     {
+        if (stateTxt.gameObject.activeInHierarchy)
+        {
+            return;
+        }
+
         stateTxt.gameObject.SetActive(true);
         StartCoroutine(DeactivateStateTxt());
 
@@ -63,15 +76,25 @@ public class MainCanves : MonoBehaviour
     private void ShowRacerNamesTxts(Dictionary<string, float> racers)
     {
         int i = 0;
+
         foreach (string racerName in racers.Keys)
         {
-            //print(i);
             racerStatePanels[i].SetPanelTxt(racerName);
             i++;
         }
 
-        statePanel.SetActive(true);
+        ranksPanel.SetActive(true);
     }
+
+    public void CreateRacersStatePanels(int numOfRacers)
+    {
+        for (int i = 0; i < numOfRacers; i++)
+        {
+            RacerStatePanel racerStatePanel = Instantiate(racerStatePanelPrefab, racersStatePanelsParent);
+            racerStatePanels.Add(racerStatePanel);
+        }
+    }
+    #endregion Characers State Management
 
     public void SetSliderValue(int num)
     {
@@ -84,38 +107,32 @@ public class MainCanves : MonoBehaviour
         nextLevelTxt.text = (currentLevlNum + 1).ToString();
     }
 
-    public void OnPrepareNewRace()
+    #region Race Management
+    public void PrepareNewRace()
     {
         progressSlider.value = 0;
+        GameManager.Instance.PrepareNewRace();
+    }
+
+    public void OnPrepareNewRace()
+    {
+        SetLevelsTextsValues(GameManager.Instance.CurrentLevelNum);
+        progressSlider.maxValue = JumpObjectsCreater.Instance.GetPathPointsNum();
+        ranksPanel.SetActive(false);
+        startPanel.SetActive(true);
     }
 
     public void StartNewRace()
     {
         startPanel.SetActive(false);
-        gameManager.StartNextLevel();
-    }
-
-    public void PrepareNextRace()
-    {
-        gameManager.PrepareNewRace();
-        SetLevelsTextsValues(gameManager.CurrentLevelNum);
-        statePanel.SetActive(false);
-        startPanel.SetActive(true);
+        GameManager.Instance.StartNextLevel();
     }
 
     public void OnRaceFinish(Dictionary<string, float> racers)
     {
         ShowRacerNamesTxts(racers);
     }
-
-    public void CreateRacersStatePanels(int numOfRacers)
-    {
-        for (int i = 0; i < numOfRacers; i++)
-        {
-            RacerStatePanel racerStatePanel =  Instantiate(racerStatePanelPrefab, racersStatePanelsParent);
-            racerStatePanels.Add(racerStatePanel);
-        }
-    }
+    #endregion Race Management
 
     private void OnDestroy()
     {

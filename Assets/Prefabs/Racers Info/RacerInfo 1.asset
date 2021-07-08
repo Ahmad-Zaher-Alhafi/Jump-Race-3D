@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RacerName: Jone
   RacerColor: {r: 0.57213455, g: 0.9622642, b: 0.39489147, a: 0}
-  NumOfJumpsToMoveToNextObject: 1
+  NumOfJumpsToMoveToNextObject: 2
   RacerDifficulty: 3

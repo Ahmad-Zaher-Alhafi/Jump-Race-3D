@@ -7,7 +7,7 @@ public class CenterPoint : MonoBehaviour
     [SerializeField] private float maxAlpha;
     [SerializeField] private float minAlpha;
     [SerializeField] private float changingAlphaSpeed;
-    [SerializeField] private float distanceToStartBlinking;
+    [SerializeField] private float distanceFromPlayerToStartBlinking;
     [SerializeField] private JumpObject jumpObject;
 
     private SpriteRenderer spriteRenderer;
@@ -27,12 +27,13 @@ public class CenterPoint : MonoBehaviour
         }
     }
 
-
     void Start()
     {
+        EventsManager.onPrepareNewRace += OnPrepareNewRace;
+
         if (hasToBeDeactivated)
         {
-            gameObject.SetActive(false);
+            Invoke("DeactivateCenterPoint", .1f);
         }
 
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -41,13 +42,26 @@ public class CenterPoint : MonoBehaviour
 
     private void Update()
     {
-        if (Vector3.Distance(transform.position, Player.Instance.transform.position) < distanceToStartBlinking)
+        if (Vector3.Distance(transform.position, Player.Instance.transform.position) < distanceFromPlayerToStartBlinking)
         {
             Blink();
         }
         else
         {
             spriteRenderer.color = new Color(spriteRenderer.color.r, spriteRenderer.color.g, spriteRenderer.color.b, 0);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (hasToBeDeactivated)
+        {
+            return;
+        }
+
+        if (other.gameObject.layer == Constances.PlayerLayerNum)
+        {
+            Player.Instance.OnCenterPointHit();
         }
     }
 
@@ -68,11 +82,21 @@ public class CenterPoint : MonoBehaviour
         spriteRenderer.color = new Color(spriteRenderer.color.r, spriteRenderer.color.g, spriteRenderer.color.b, alpha);
     }
 
-    private void OnTriggerEnter(Collider other)
+    public void DeactivateCenterPoint()
     {
-        if (other.gameObject.layer == Constances.PlayerLayerNum)
+        gameObject.SetActive(false);
+    }
+    
+    private void OnPrepareNewRace()
+    {
+        if (!hasToBeDeactivated)
         {
-            Player.Instance.OnCenterPointHit();
+            gameObject.SetActive(true);
         }
+    }
+
+    private void OnDestroy()
+    {
+        EventsManager.onPrepareNewRace -= OnPrepareNewRace;
     }
 }

@@ -113,5 +113,5 @@ MonoBehaviour:
   maxAlpha: 1
   minAlpha: 0.5
   changingAlphaSpeed: 0.5
-  distanceToStartBlinking: 20
+  distanceFromPlayerToStartBlinking: 20
   jumpObject: {fileID: 0}

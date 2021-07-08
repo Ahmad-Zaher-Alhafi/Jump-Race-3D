@@ -342,7 +342,7 @@ CapsuleCollider:
   m_GameObject: {fileID: 970189968326448628}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   m_Radius: 0.36689773
   m_Height: 0.73379546
   m_Direction: 1
@@ -390,10 +390,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   forwardSpeed: 15
   rotatingSpeed: 2
-  jumpforce: 17
   lowestYPosToLose: -5
   speedUpIncreaseValue: 3
   speedUpTime: 3
+  normalJumpForce: 20
+  longJumpForce: 40
   hitForce: 3
 --- !u!114 &8428346652431839939
 MonoBehaviour:

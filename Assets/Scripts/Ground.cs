@@ -10,9 +10,9 @@ public class Ground : MonoBehaviour
     {
         if (other.gameObject.layer == Constances.PlayerLayerNum)
         {
-            waterParticle.transform.position = new Vector3(other.transform.position.x ,transform.position.y, other.transform.position.z);
+            waterParticle.transform.position = new Vector3(Player.Instance.transform.position.x ,transform.position.y, Player.Instance.transform.position.z);
             waterParticle.Play();
-            other.GetComponent<Player>().Die();
+            Player.Instance.Die();
         }
     }
 }

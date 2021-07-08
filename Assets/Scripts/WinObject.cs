@@ -4,40 +4,42 @@ using UnityEngine;
 
 public class WinObject : MonoBehaviour
 {
-    [HideInInspector] public GameManager GameManager;
-
     private const int highestRank = 1000;
     private bool hasSomeoneWonTheRace;
     private int counter = highestRank;
+
+    private void Awake()
+    {
+        EventsManager.onPrepareNewRace += OnPrepareNewRace;
+    }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == Constances.PlayerLayerNum)
         {
-            Player player =  other.GetComponent<Player>();
-            player.PlayerRank = counter;
+            Player.Instance.Rank = counter;
 
             if (!hasSomeoneWonTheRace)
             {
                 hasSomeoneWonTheRace = true;
-                player.OnFinishTheRace(true);
-                GameManager.FinishRace(true);
+                Player.Instance.OnFinishTheRace(true);
+                GameManager.Instance.FinishRace(true);
             }
             else
             {
-                player.OnFinishTheRace(false);
-                GameManager.FinishRace(false);
+                Player.Instance.OnFinishTheRace(false);
+                GameManager.Instance.FinishRace(false);
             }
 
             hasSomeoneWonTheRace = true;
-            other.transform.position = transform.position;
+            Player.Instance.transform.position = new Vector3(Player.Instance.transform.position.x, transform.position.y + .2f, Player.Instance.transform.position.z);
             counter--;
         }
         else if (other.gameObject.layer == Constances.RacerLayerNum)
         {
             Racer racer =  other.GetComponent<Racer>();
             racer.HasFinishedTheRace = true;
-            racer.RacerRank = counter;
+            racer.Rank = counter;
 
             if (!hasSomeoneWonTheRace)
             {
@@ -48,15 +50,19 @@ public class WinObject : MonoBehaviour
             {
                 racer.OnFinishTheRace(false);
             }
-
             
-            other.transform.position = transform.position;
+            other.transform.position = new Vector3(racer.transform.position.x, transform.position.y + .2f, racer.transform.position.z);
             counter--;
         }
     }
 
-    public void OnPrepareNextLevel()
+    public void OnPrepareNewRace()
     {
         hasSomeoneWonTheRace = false;
+    }
+
+    private void OnApplicationQuit()
+    {
+        EventsManager.onPrepareNewRace -= OnPrepareNewRace;
     }
 }

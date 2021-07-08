@@ -4,15 +4,33 @@ using UnityEngine;
 
 public class DataManager : MonoBehaviour
 {
-    [SerializeField] GameManager gameManager;
+    public static DataManager Instance;
+
+    [Header("For testing only")]
+    [SerializeField] private bool hasToStartFromFirstLevel;
 
     private void Awake()
     {
-        PlayerPrefs.DeleteAll();
+        if (Instance == null)
+        {
+            Instance = GetComponent<DataManager>();
+        }
 
+        if (hasToStartFromFirstLevel)
+        {
+            PlayerPrefs.DeleteAll();
+        }
+    }
+
+    public int GetCurrentLevelNum() 
+    {
         if (PlayerPrefs.HasKey(Constances.levelNumKey))
         {
-            gameManager.CurrentLevelNum = PlayerPrefs.GetInt(Constances.levelNumKey);
+            return PlayerPrefs.GetInt(Constances.levelNumKey);
+        }
+        else
+        {
+            return 0;
         }
     }
 
@@ -20,12 +38,12 @@ public class DataManager : MonoBehaviour
     {
         if (pause)
         {
-            PlayerPrefs.SetInt(Constances.levelNumKey, gameManager.CurrentLevelNum);
+            PlayerPrefs.SetInt(Constances.levelNumKey, GameManager.Instance.CurrentLevelNum);
         }
     }
 
     private void OnApplicationQuit()
     {
-        PlayerPrefs.SetInt(Constances.levelNumKey, gameManager.CurrentLevelNum);
+        PlayerPrefs.SetInt(Constances.levelNumKey, GameManager.Instance.CurrentLevelNum);
     }
 }

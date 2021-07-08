@@ -14,7 +14,10 @@ namespace SplineMesh {
     /// </summary>
     [DisallowMultipleComponent]
     [ExecuteInEditMode]
-    public class Spline : MonoBehaviour {
+    public class Spline : MonoBehaviour
+    {
+        public bool WasItsJumObjectsCreated;
+
         /// <summary>
         /// The spline nodes.
         /// Warning, this collection shouldn't be changed manualy. Use specific methods to add and remove nodes.

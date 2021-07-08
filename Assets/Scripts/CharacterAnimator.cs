@@ -9,10 +9,7 @@ public class CharacterAnimator : MonoBehaviour
     [SerializeField] private AnimationClip loseAnimationClip;
     [SerializeField] private AnimationClip warmingupAnimationClip;
 
-
-
     private Animator animator;
-
 
     void Awake()
     {

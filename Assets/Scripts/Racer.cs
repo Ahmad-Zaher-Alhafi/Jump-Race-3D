@@ -2,19 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Racer : MonoBehaviour
+public class Racer : RaceCharacter
 {
-    [SerializeField] private Vector3 startPosOffset;
-
     private Renderer render;
     private RacerMovement racerMovement;
-    private JumpObject currentJumpObject;
     private JumpObject jumpObjectToGoTo;
     private int numOfJumpsThatHasDid;
-    private CharacterAnimator animator;
 
-    private bool isDead;
-    public bool IsDead => isDead;
 
     private bool hasFinishedTheRace;
     public bool HasFinishedTheRace
@@ -28,13 +22,6 @@ public class Racer : MonoBehaviour
     {
         get => racerName;
         set => racerName = value;
-    }
-
-    private int racerRank;
-    public int RacerRank
-    {
-        get => racerRank;
-        set => racerRank = value;
     }
 
     private Constances.RacerDifficulty racerDifficulty;
@@ -57,77 +44,52 @@ public class Racer : MonoBehaviour
         get => hasWonTheRace;
         set => hasWonTheRace = value;
     }
-
-    void Awake()
+    public Vector3 StartPosOffset
     {
+        get => startPosOffset;
+    }
+
+    protected override void Awake()
+    {
+        base.Awake();
+
         racerMovement = GetComponent<RacerMovement>();
         render = GetComponent<Renderer>();
-        animator = GetComponent<CharacterAnimator>();
-        
         numOfJumpsThatHasDid = 0;
         name = racerName;
-        animator.playAnimation(Constances.AnimationsTypes.Warmingup);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag != Constances.PathJumpObjectTag)
+        if (other.gameObject.layer == Constances.PlayerLayerNum)
+        {
+            Player.Instance.OnTriggerEnterWithRacer(transform);
+            Die();
+        }
+    }
+
+    public void OnTriggerEnterWithJumpableObject(JumpObject jumpObject)
+    {
+        if (jumpObject.IsItLastJumpObject)
         {
             return;
         }
 
-        if (other.gameObject.layer == Constances.JumpObjectLayerNum)
+        if (jumpObject.JumpObjectIndex >= currentJumpObject.JumpObjectIndex)
         {
-            JumpObject jumpObject = other.gameObject.GetComponent<JumpObject>();
+            currentJumpObject = jumpObject;
 
-            if (jumpObject.JumpObjectIndex >= currentJumpObject.JumpObjectIndex)
+            rank = currentJumpObject.JumpObjectIndex;
+
+            if (racerMovement.IsAbleToJump)
             {
-                currentJumpObject = jumpObject;
-            }
-            
-        }
-        else if (other.gameObject.layer == Constances.JumpObjectBaseLayerNum)
-        {
-            JumpObject jumpObject = other.gameObject.GetComponent<JumpObjectBase>().GetJumpObjectOfThisBase();
-
-            if (jumpObject.JumpObjectIndex >= currentJumpObject.JumpObjectIndex)
-            {
-                currentJumpObject = jumpObject;
-            }
-        }
-
-        if (currentJumpObject.IsItLastJumpObject)
-        {
-            return;
-        }
-
-        racerRank = currentJumpObject.JumpObjectIndex;
-        jumpObjectToGoTo = JumpObjectsCreater.Instance.GetNextJumpObject(currentJumpObject.JumpObjectIndex);
-
-        if (racerMovement.IsAbleToJump)
-        {
-            racerMovement.HasToMoveToNextJumpObject = false;
-
-            if (currentJumpObject != null)
-            {
+                racerMovement.HasToMoveToNextJumpObject = false;
                 jumpObjectToGoTo = JumpObjectsCreater.Instance.GetNextJumpObject(currentJumpObject.JumpObjectIndex);
-            }
-
-            if (other.gameObject.tag == Constances.PathJumpObjectTag)
-            {
-                racerMovement.Jump(false);
-            }
-            else
-            {
                 racerMovement.Jump(true);
-            }
+                numOfJumpsThatHasDid++;
+                racerMovement.IsAbleToJump = false;
+                animator.SetAnimatorParameter(true);
 
-            numOfJumpsThatHasDid++;
-            racerMovement.IsAbleToJump = false;
-            animator.SetAnimatorParameter(true);
-
-            if (!currentJumpObject.IsItLastJumpObject)
-            {
                 if (numOfJumpsThatHasDid >= numOfJumpsToMoveToNextObject)
                 {
                     if (CheckIfHasToDie(racerDifficulty))
@@ -144,7 +106,7 @@ public class Racer : MonoBehaviour
         }
     }
 
-    private void OnTriggerExit(Collider other)
+    public void OnTriggerExitFromJumpAbleObject()
     {
         racerMovement.IsAbleToJump = true;
     }
@@ -154,33 +116,16 @@ public class Racer : MonoBehaviour
         return jumpObjectToGoTo;
     }
 
-    public JumpObject GetCurrentJumpObject()
-    {
-        if (currentJumpObject != null)
-        {
-            return currentJumpObject;
-        }
-        else
-        {
-            return null;
-        }
-    }
+   
 
-    public void SetCurrentJumpObject(JumpObject jumpObject)
+    public override void OnPrepareNewRace(JumpObject startJumpObject)
     {
-        currentJumpObject = jumpObject;
-        racerRank = jumpObject.JumpObjectIndex;
-    }
+        base.OnPrepareNewRace(startJumpObject);
 
-    public void OnPrepareNewRace(JumpObject startJumpObject)
-    {
-        transform.position = startJumpObject.transform.position + startPosOffset;
+        transform.rotation = Quaternion.identity;
         numOfJumpsThatHasDid = 0;
         racerMovement.HasToMoveToNextJumpObject = false;
         jumpObjectToGoTo = null;
-        animator.SetAnimatorParameter(false);
-        animator.playAnimation(Constances.AnimationsTypes.Warmingup);
-        isDead = false;
         hasFinishedTheRace = false;
         racerMovement.OnPrepareNewRace();
     }

@@ -6,11 +6,11 @@ public class Movement : MonoBehaviour
 {
     [SerializeField] protected float forwardSpeed;
     [SerializeField] protected float rotatingSpeed;
-    [SerializeField] protected float jumpforce;
     [SerializeField] protected float lowestYPosToLose;
     [SerializeField] protected float speedUpIncreaseValue;
     [SerializeField] protected float speedUpTime;
-
+    [SerializeField] private float normalJumpForce;
+    [SerializeField] private float longJumpForce;
 
     protected Rigidbody rig;
     protected bool hasToMove;
@@ -26,29 +26,33 @@ public class Movement : MonoBehaviour
         set => isAbleToJump = value;
     }
 
+    private bool hasSpeededUp
+    {
+        get => forwardSpeed != initialForwardSpeed + speedUpIncreaseValue;
+    }
+
     protected virtual void Awake()
     {
         rig = GetComponent<Rigidbody>();
         firstXMousePos = Mathf.Infinity;
         initialForwardSpeed = forwardSpeed;
         speedUpPeriod = new WaitForSeconds(speedUpTime);
-        rig.useGravity = false;
+        DisableGravity();
     }
 
-    public void Jump(bool isItLongJump)
+    public void Jump(bool isItNormalJump)
     {
         isAbleToJump = false;
         rig.velocity = Vector3.zero;
 
-        if (isItLongJump)
+        if (isItNormalJump)
         {
-            rig.AddForce(Vector3.up * jumpforce * 2.5f, ForceMode.Impulse);
+            rig.AddForce(Vector3.up * normalJumpForce, ForceMode.Impulse);
         }
         else
         {
-            rig.AddForce(Vector3.up * jumpforce, ForceMode.Impulse);
+            rig.AddForce(Vector3.up * longJumpForce, ForceMode.Impulse);
         }
-
     }
 
     public void SpeedUp()
@@ -58,7 +62,7 @@ public class Movement : MonoBehaviour
             StopCoroutine(backToNormalSpeedCoroutine);
         }
 
-        if (forwardSpeed != initialForwardSpeed + speedUpIncreaseValue)
+        if (!hasSpeededUp)
         {
             forwardSpeed += speedUpIncreaseValue;
         }
@@ -71,22 +75,22 @@ public class Movement : MonoBehaviour
         yield return speedUpPeriod;
         forwardSpeed = initialForwardSpeed;
     }
-    public virtual void OnPrepareNewRace()
-    {
-        transform.eulerAngles = Vector3.up * -90;
-        DisableGravity();
-    }
 
     public void DisableGravity()
     {
+        rig.constraints = RigidbodyConstraints.FreezeAll;
         rig.useGravity = false;
         rig.velocity = Vector3.zero;
-        //rig.isKinematic = true;
+    }
+
+    public virtual void OnPrepareNewRace()
+    {
+        DisableGravity();
     }
 
     public void OnRaceStart()
     {
+        rig.constraints = ~RigidbodyConstraints.FreezePositionY;
         rig.useGravity = true;
-        //rig.isKinematic = false;
     }
 }
