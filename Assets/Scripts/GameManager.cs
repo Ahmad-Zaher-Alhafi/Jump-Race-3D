@@ -44,6 +44,7 @@ public class GameManager : MonoBehaviour
         JumpObjectsCreater.Instance.OnPrepareNewRace(currentLevelNum);
         RacersCreater.Instance.OnPrepareNewRace();
         Player.Instance.OnPrepareNewRace(JumpObjectsCreater.Instance.JumpObjects[0]);
+        CameraManager.Instance.OnPrepareNewRace();
         MainCanves.Instance.OnPrepareNewRace();
         InputHandler.Instance.OnPrepareNewRace();
 
@@ -70,17 +71,23 @@ public class GameManager : MonoBehaviour
 
         hasRaceFinished = true;
 
-        if (hasWon && isThereMoreLevels)
+        if (hasWon)
         {
-            currentLevelNum++;
+            WinParticlesManager.Instance.PlayWinParticles();
+
+            if (isThereMoreLevels)
+            {
+                currentLevelNum++;
+            }
         }
         
         SetPlayerRank(hasWon);
         SetRacersRank();
-
         racersRanks = racersRanks.OrderByDescending(t => t.Value).ToDictionary(k => k.Key, k=>k.Value);
 
-        MainCanves.Instance.OnRaceFinish(racersRanks);
+        
+        CameraManager.Instance.OnRaceFinish();
+        MainCanves.Instance.OnRaceFinish(hasWon, racersRanks);
     }
 
     public void StartNextLevel()

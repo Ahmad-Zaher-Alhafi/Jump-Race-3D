@@ -88,7 +88,7 @@ public class Racer : RaceCharacter
                 racerMovement.Jump(true);
                 numOfJumpsThatHasDid++;
                 racerMovement.IsAbleToJump = false;
-                animator.SetAnimatorParameter(true);
+                animator.playAnimation(Constances.AnimationsTypes.Jump);
 
                 if (numOfJumpsThatHasDid >= numOfJumpsToMoveToNextObject)
                 {

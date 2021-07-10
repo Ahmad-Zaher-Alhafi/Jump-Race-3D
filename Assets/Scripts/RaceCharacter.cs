@@ -22,7 +22,6 @@ public class RaceCharacter : MonoBehaviour
     protected virtual void Awake()
     {
         animator = GetComponent<CharacterAnimator>();
-        animator.playAnimation(Constances.AnimationsTypes.Warmingup);
     }
 
     public virtual void OnPrepareNewRace(JumpObject startJumpObject)

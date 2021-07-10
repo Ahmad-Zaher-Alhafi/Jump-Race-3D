@@ -411,6 +411,10 @@ MonoBehaviour:
   winAnimationClip: {fileID: 7400000, guid: 3f9997ba38b1d0d41a6dd214ca2ef100, type: 2}
   loseAnimationClip: {fileID: 7400000, guid: 2898e30e81ebb2444bd1a5b52be5ddb3, type: 2}
   warmingupAnimationClip: {fileID: 7400000, guid: ead724f0216531740ae6fb53cfa3c140, type: 2}
+  jumpAnimationClips:
+  - {fileID: 7400000, guid: 72b615e9bb448da45994d6cb0c208cb8, type: 2}
+  - {fileID: 7400000, guid: 252ce9bb0ff2677478e237050cfd5fbe, type: 2}
+  - {fileID: 7400000, guid: 082feae0d29d8ef419ccb30543298fc6, type: 2}
 --- !u!1 &1059093509855721135
 GameObject:
   m_ObjectHideFlags: 0

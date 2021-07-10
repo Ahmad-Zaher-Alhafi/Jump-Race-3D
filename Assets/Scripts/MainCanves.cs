@@ -73,8 +73,13 @@ public class MainCanves : MonoBehaviour
         stateTxt.gameObject.SetActive(false);
     }
 
-    private void ShowRacerNamesTxts(Dictionary<string, float> racers)
+    private IEnumerator ShowRacerNamesTxts(bool hasWon, Dictionary<string, float> racers)
     {
+        if (hasWon)
+        {
+            yield return new WaitForSeconds(4);
+        }
+        
         int i = 0;
 
         foreach (string racerName in racers.Keys)
@@ -128,9 +133,9 @@ public class MainCanves : MonoBehaviour
         GameManager.Instance.StartNextLevel();
     }
 
-    public void OnRaceFinish(Dictionary<string, float> racers)
+    public void OnRaceFinish(bool hasWon, Dictionary<string, float> racers)
     {
-        ShowRacerNamesTxts(racers);
+        StartCoroutine(ShowRacerNamesTxts(hasWon, racers));
     }
     #endregion Race Management
 

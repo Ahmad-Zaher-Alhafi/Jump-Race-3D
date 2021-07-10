@@ -37,8 +37,12 @@ public class JumpObject : MonoBehaviour
         {
             if (!IsItLastJumpObject)
             {
-                OrderToRotate();
-                DeactivateCenterPoint();
+                if (IsItPathJumpObject)
+                {
+                    OrderToRotate();
+                    DeactivateCenterPoint();
+                }
+                
                 Player.Instance.OnTriggerEnterWithJumpableObject(false, this, IsItPathJumpObject);
             }
         }

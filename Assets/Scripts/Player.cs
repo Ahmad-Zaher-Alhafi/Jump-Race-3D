@@ -52,7 +52,7 @@ public class Player : RaceCharacter
                 rank = currentJumpObject.JumpObjectIndex;
                 MainCanves.Instance.SetSliderValue(currentJumpObject.JumpObjectIndex);
                 playerMovement.Jump(isItPathJumpObject);
-                animator.SetAnimatorParameter(true);
+                animator.playAnimation(Constances.AnimationsTypes.Jump);
             }
         }
     }
@@ -114,9 +114,9 @@ public class Player : RaceCharacter
 
     public override void OnPrepareNewRace(JumpObject startJumpObject)
     {
-        base.OnPrepareNewRace(startJumpObject);
-
         gameObject.SetActive(true);
+
+        base.OnPrepareNewRace(startJumpObject);
         
         playerLine.OnPrepareNewRace();
         
@@ -125,6 +125,9 @@ public class Player : RaceCharacter
         CorrectPlayerRotation();
     }
 
+    /// <summary>
+    /// Let the player looks towards other racers at the begining of the race
+    /// </summary>
     private void CorrectPlayerRotation()
     {
         Vector3 initialAngle = transform.eulerAngles;
