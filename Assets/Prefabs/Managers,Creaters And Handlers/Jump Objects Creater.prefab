@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7635852166105326424
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7635852166105326422}
+  - component: {fileID: 7635852166105326423}
+  m_Layer: 0
+  m_Name: Jump Objects Creater
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7635852166105326422
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7635852166105326424}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.029014919, y: -2.958813, z: 2.1705942}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7635852166105326423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7635852166105326424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3d7c6f2f70855b499351b1b520b98e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  JumpObjects: []
+  pathCreaters:
+  - {fileID: 0}
+  - {fileID: 0}
+  jumpObjectBasePrefab: {fileID: 3277516432391836987, guid: 860f4dae430278e448f2331c1b14af5c, type: 3}
+  jumpObjectsColors:
+  - {r: 0.023718417, g: 0.18969512, b: 0.38679248, a: 0}
+  - {r: 0.9960785, g: 0.1254902, b: 0.53333336, a: 0}
+  - {r: 1, g: 0, b: 0, a: 0}
+  - {r: 0.8962264, g: 0.8927616, b: 0.012682426, a: 0}
+  - {r: 0.39481133, g: 0.764151, b: 0, a: 0}
+  - {r: 0.020914912, g: 0.8867924, b: 0.85283655, a: 0}
+  ground: {fileID: 0}
+  exestraJumpObjectBaseOffset: {x: 2, y: 0, z: 2}

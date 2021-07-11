@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8884356650466014456
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8884356650466014459}
+  - component: {fileID: 8884356650466014458}
+  m_Layer: 0
+  m_Name: Racers Creater
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8884356650466014459
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8884356650466014456}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 233.99379, y: 887.4371, z: -41.594955}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8884356650466014458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8884356650466014456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0aa1da45b9fe44f43b49833c9c18bb52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  racers: []
+  racersParent: {fileID: 0}
+  jumpObjectsCreater: {fileID: 0}
+  racerPrefab: {fileID: -4215258715943323376, guid: 5ab6cc350000e20418156543d1e2253d, type: 3}
+  racerCreatPosOffset: {x: 0, y: 0, z: 0}
+  gameManager: {fileID: 0}
+  racerInfos:
+  - {fileID: 11400000, guid: 7d80d2ce071ca60409870c9e4b273478, type: 2}
+  - {fileID: 11400000, guid: 40baec372c65c3d4d9c9d48c4818360e, type: 2}
+  - {fileID: 11400000, guid: b6ba163d83b117b4c97edf9f9f155d59, type: 2}
+  - {fileID: 11400000, guid: 215f0a2e645da5a439f0862f6d2ff162, type: 2}
+  - {fileID: 11400000, guid: 2c413e362ae089e43a5d4361c65ffc4a, type: 2}
+  mainCanves: {fileID: 0}
