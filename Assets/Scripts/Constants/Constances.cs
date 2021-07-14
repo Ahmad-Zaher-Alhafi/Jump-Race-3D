@@ -48,6 +48,5 @@ public static class Constances
        Win,
        Warmingup,
        Lose,
-
     }
 }

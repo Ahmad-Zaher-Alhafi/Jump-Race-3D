@@ -17,24 +17,6 @@ public class CharacterAnimator : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
-    //public void SetAnimatorParameter(bool hasToJump)
-    //{
-    //    if (animator == null)
-    //    {
-    //        animator = GetComponent<Animator>();
-    //    }
-
-    //    if (hasToJump)
-    //    {
-    //        animator.SetBool(Constances.HasToJumpParameter, true);
-    //        animator.SetInteger(Constances.AnimationNumParameter, Random.Range(0, 3));
-    //    }
-    //    else
-    //    {
-    //        animator.SetBool(Constances.HasToJumpParameter, false);
-    //    }
-    //}
-
     public void playAnimation(Constances.AnimationsTypes animationType)
     {
         if (animator == null)
@@ -60,9 +42,4 @@ public class CharacterAnimator : MonoBehaviour
                 break;
         }
     }
-
-    //public void PlayFallAnimation()
-    //{
-    //    SetAnimatorParameter(false);
-    //}
 }

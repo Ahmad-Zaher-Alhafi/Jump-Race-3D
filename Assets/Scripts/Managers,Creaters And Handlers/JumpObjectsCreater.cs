@@ -50,9 +50,12 @@ public class JumpObjectsCreater : MonoBehaviour
         for (int i = 0; i < currentLevelPathCreater.nodes.Count; i++)
         {
             Vector3 pathPointWorldPos = currentLevelPathCreater.transform.TransformPoint(currentLevelPathCreater.nodes[i].Position);
+
             GameObject jumpObBase = Instantiate(jumpObjectBasePrefab, pathPointWorldPos, jumpObjectBasePrefab.transform.rotation, currentLevelPathCreater.transform);
             JumpObjectBase jumpObjectBase = jumpObBase.GetComponent<JumpObjectBase>();
+
             Color jumpObColor = jumpObjectsColors[Random.Range(1, jumpObjectsColors.Length)];
+
             jumpObjectBase.Initialize(true, i, jumpObColor, currentLevelPathCreater.nodes.Count);
             JumpObjects.Add(jumpObjectBase.JumpObjectOfThisBase);
         }
@@ -66,9 +69,12 @@ public class JumpObjectsCreater : MonoBehaviour
         for (int i = 0; i < currentLevelPathCreater.nodes.Count; i += 2)
         {
             Vector3 randExestraJumpObjectBasePos = GetRandomExestraJumpObPos(currentLevelPathCreater.nodes[i].Position);
+
             GameObject jumpObBase = Instantiate(jumpObjectBasePrefab, randExestraJumpObjectBasePos, jumpObjectBasePrefab.transform.rotation, currentLevelPathCreater.transform);
+
             JumpObjectBase jumpObjectBase = jumpObBase.GetComponent<JumpObjectBase>();
             Color jumpObColor = jumpObjectsColors[0];
+
             jumpObjectBase.Initialize(false, i, jumpObColor, currentLevelPathCreater.nodes.Count);
         }
     }

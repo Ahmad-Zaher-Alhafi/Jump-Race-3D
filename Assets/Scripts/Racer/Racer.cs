@@ -9,7 +9,6 @@ public class Racer : RaceCharacter
     private JumpObject jumpObjectToGoTo;
     private int numOfJumpsThatHasDid;
 
-
     private bool hasFinishedTheRace;
     public bool HasFinishedTheRace
     {
@@ -25,29 +24,10 @@ public class Racer : RaceCharacter
     }
 
     private Constances.RacerDifficulty racerDifficulty;
-    public Constances.RacerDifficulty RacerDifficulty
-    {
-        get => racerDifficulty;
-        set => racerDifficulty = value;
-    }
 
     private int numOfJumpsToMoveToNextObject;
-    public int NumOfJumpsToMoveToNextObject
-    {
-        get => numOfJumpsToMoveToNextObject;
-        set => numOfJumpsToMoveToNextObject = value;
-    }
 
     private bool hasWonTheRace;
-    public bool HasWonTheRace
-    {
-        get => hasWonTheRace;
-        set => hasWonTheRace = value;
-    }
-    public Vector3 StartPosOffset
-    {
-        get => startPosOffset;
-    }
 
     protected override void Awake()
     {
@@ -66,6 +46,16 @@ public class Racer : RaceCharacter
             Player.Instance.OnTriggerEnterWithRacer(transform);
             Die();
         }
+    }
+
+    public void Initialize(JumpObject startJumpObject, Color racerColor, string racerName, Constances.RacerDifficulty racerDifficulty, int numOfJumpsToMoveToNextObject)
+    {
+        OnPrepareNewRace(startJumpObject);
+        SetRacerColor(racerColor);
+        this.racerName = racerName;
+        name = racerName;
+        this.racerDifficulty = racerDifficulty;
+        this.numOfJumpsToMoveToNextObject = numOfJumpsToMoveToNextObject;
     }
 
     public void OnTriggerEnterWithJumpableObject(JumpObject jumpObject)

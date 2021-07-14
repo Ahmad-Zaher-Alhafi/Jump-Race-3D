@@ -38,13 +38,10 @@ public class RacersCreater : MonoBehaviour
             for (int i = 0; i < racerInfos.Count; i++)
             {
                 JumpObject jumpObject = JumpObjectsCreater.Instance.JumpObjects[i + 1];
+
                 Racer racer = Instantiate(racerPrefab, jumpObject.transform.position + racerCreatPosOffset, racerPrefab.transform.rotation, racersParent);
-                racer.OnPrepareNewRace(jumpObject);
-                racer.SetRacerColor(racerInfos[i].RacerColor);
-                racer.RacerName = racerInfos[i].RacerName;
-                racer.RacerDifficulty = racerInfos[i].RacerDifficulty;
-                racer.name = racer.RacerName;
-                racer.NumOfJumpsToMoveToNextObject = racerInfos[i].NumOfJumpsToMoveToNextObject;
+                racer.Initialize(jumpObject, racerInfos[i].RacerColor, racerInfos[i].RacerName, racerInfos[i].RacerDifficulty, racerInfos[i].NumOfJumpsToMoveToNextObject);
+
                 racers.Add(racer);
             }
 

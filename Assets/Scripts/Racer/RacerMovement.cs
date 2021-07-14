@@ -38,7 +38,8 @@ public class RacerMovement : Movement
 
             if (jumpObject != null)
             {
-                transform.position = Vector3.Lerp(transform.position, new Vector3(jumpObject.transform.position.x, transform.position.y, jumpObject.transform.position.z), forwardSpeed / Vector3.Distance(transform.position, jumpObject.transform.position) * Time.deltaTime);
+                Vector3 objToGoToPos = new Vector3(jumpObject.transform.position.x, transform.position.y, jumpObject.transform.position.z);
+                transform.position = Vector3.Lerp(transform.position, objToGoToPos, forwardSpeed / Vector3.Distance(transform.position, jumpObject.transform.position) * Time.deltaTime);
             }
         }
     }
@@ -46,7 +47,8 @@ public class RacerMovement : Movement
     private void MoveToNextJumpObject()
     {
         JumpObject nextJumpObjectPos = racer.GetNextJumpObject();
-        transform.position = Vector3.Lerp(transform.position, new Vector3(nextJumpObjectPos.transform.position.x, transform.position.y, nextJumpObjectPos.transform.position.z), forwardSpeed / Vector3.Distance(transform.position, nextJumpObjectPos.transform.position) * Time.deltaTime);
+        Vector3 objToGoToPos = new Vector3(nextJumpObjectPos.transform.position.x, transform.position.y, nextJumpObjectPos.transform.position.z);
+        transform.position = Vector3.Lerp(transform.position, objToGoToPos, forwardSpeed / Vector3.Distance(transform.position, nextJumpObjectPos.transform.position) * Time.deltaTime);
     }
 
     private void Rotate()
@@ -56,7 +58,9 @@ public class RacerMovement : Movement
         Vector3 newAngle = transform.eulerAngles;
         transform.eulerAngles = oldAngle;
 
-        transform.eulerAngles = Vector3.Slerp(transform.eulerAngles, new Vector3(transform.eulerAngles.x, newAngle.y, transform.eulerAngles.z), rotatingSpeed * Time.deltaTime);
+        Vector3 wantedAngle = new Vector3(transform.eulerAngles.x, newAngle.y, transform.eulerAngles.z);
+
+        transform.eulerAngles = Vector3.Slerp(transform.eulerAngles, wantedAngle, rotatingSpeed * Time.deltaTime);
     }
 
     public override void OnPrepareNewRace()
